@@ -18,7 +18,7 @@
 
 ### 1. **환경 설정**
 ```bash
-conda create -n data_market_platform python=3.9 -y
+conda create -n data_market_platform python=3.11.9 -y
 conda activate data_market_platform
 ```
 
