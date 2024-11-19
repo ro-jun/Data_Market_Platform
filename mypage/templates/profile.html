@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>데이터 마켓 프로필</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 섹션 -->
+        <div class="header">
+            <div class="profile-section">
+                <img src="{{ user.profile_image }}" alt="프로필 이미지" class="profile-image">
+                <div class="profile-info">
+                    <h1>{{ user.name }}</h1>
+                    <p>이메일: {{ user.email }}</p>
+                    <p>전화번호: {{ user.phone }}</p>
+                </div>
+            </div>
+            <div class="points-section">
+                <p>보유 포인트: <strong>{{ user.points | number }}</strong></p>
+            </div>
+        </div>
+
+        <!-- 메인 버튼 섹션 -->
+        <div class="main-buttons">
+            <button class="main-btn" id="findData">데이터 찾기</button>
+            <button class="main-btn" id="buyData">삽니다</button>
+            <button class="main-btn" id="sellData">팝니다</button>
+            <button class="main-btn" id="freeData">무료 데이터</button>
+        </div>
+
+        <!-- 통계 섹션 -->
+        <div class="stats">
+            <div class="stat">
+                <h2>{{ user.purchased_data }}</h2>
+                <p>구매 데이터 수</p>
+            </div>
+            <div class="stat">
+                <h2>{{ user.uploaded_data }}</h2>
+                <p>업로드 데이터 수</p>
+            </div>
+            <div class="stat">
+                <h2>{{ user.sold_data }}</h2>
+                <p>판매 데이터 수</p>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
