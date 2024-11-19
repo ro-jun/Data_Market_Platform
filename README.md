@@ -34,6 +34,7 @@ MONGO_URI=mongodb://localhost:27017/data_market_db
 
 ---
 
+```
 Data_Market_Platform/
 ├── app.py               # Flask 애플리케이션 엔트리포인트
 ├── requirements.txt     # 프로젝트 의존성 리스트
@@ -70,3 +71,4 @@ Data_Market_Platform/
     ├── test_routes.py   # 라우트 테스트
     ├── test_models.py   # 데이터베이스 모델 테스트
     └── test_chatbot.py  # 챗봇 테스트
+```
