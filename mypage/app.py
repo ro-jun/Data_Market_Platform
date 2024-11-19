@@ -19,6 +19,6 @@ def profile():
         "points": 100000,  # 숫자 그대로 전달
     }
     return render_template('profile.html', user=user_data)
-
+#hihi
 if __name__ == '__main__':
     app.run(debug=True)
