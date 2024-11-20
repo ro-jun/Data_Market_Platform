@@ -39,6 +39,7 @@ Data_Market_Platform/
 ├── app.py               # Flask 애플리케이션 엔트리포인트
 ├── requirements.txt     # 프로젝트 의존성 리스트
 ├── .env                 # 환경 변수 파일
+├── .gitignore           # Git에서 제외할 파일 정의
 ├── README.md            # 프로젝트 설명 파일
 ├── server/              # 서버 관련 코드
 │   ├── routes/          # Flask 라우트 관리
@@ -63,12 +64,34 @@ Data_Market_Platform/
 │   └── intents/         # 챗봇 대화 의도 파일
 │       └── base_intents.json
 ├── frontend/            # 프런트엔드 관련 코드
-│   ├── index.html       # 메인 페이지
-│   ├── styles.css       # 스타일 시트
-│   └── scripts.js       # 자바스크립트 코드
-└── tests/               # 테스트 코드
-    ├── test_app.py      # 전체 애플리케이션 테스트
-    ├── test_routes.py   # 라우트 테스트
-    ├── test_models.py   # 데이터베이스 모델 테스트
-    └── test_chatbot.py  # 챗봇 테스트
+│   ├── index.html       # 메인 홈페이지
+│   ├── styles/          # CSS 스타일 파일
+│   │   ├── main.css     # 공통 스타일
+│   │   ├── homepage.css # 홈페이지 스타일
+│   │   └── chatbot.css  # 챗봇 관련 스타일
+│   ├── scripts/         # 자바스크립트 파일
+│   │   ├── main.js      # 공통 스크립트
+│   │   ├── homepage.js  # 홈페이지 전용 스크립트
+│   │   └── chatbot.js   # 챗봇 관련 스크립트
+│   └── assets/          # 이미지 및 아이콘
+│       ├── images/      # 이미지 파일
+│       │   ├── homepage-banner.jpg # 홈페이지 배너 이미지
+│       │   └── logo.png            # 로고 이미지
+│       └── icons/       # 아이콘 파일
+│           └── chatbot-icon.svg    # 챗봇 아이콘
+├── tests/               # 테스트 코드
+│   ├── test_app.py      # 전체 애플리케이션 테스트
+│   ├── test_routes.py   # 라우트 테스트
+│   ├── test_models.py   # 데이터베이스 모델 테스트
+│   └── test_chatbot.py  # 챗봇 테스트
+└── mypage/              # 사용자 정의 페이지
+    ├── templates/       # HTML 템플릿 파일
+    │   └── profile.html # 사용자 프로필 페이지
+    ├── static/          # 정적 파일 (CSS, JS, 이미지)
+        ├── css/
+        │   └── styles.css # 프로필 페이지 전용 CSS
+        ├── js/
+        │   └── scripts.js # 프로필 페이지 전용 JS
+        └── images/
+            └── profile.jpg # 사용자 프로필 이미지
 ```
