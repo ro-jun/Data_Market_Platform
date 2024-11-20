@@ -9,8 +9,6 @@
    데이터를 등록, 검색, 구매 및 판매할 수 있는 기능 제공.
 2. **챗봇 기능**  
    사용자가 데이터를 쉽게 검색하고 관리할 수 있도록 지원.
-3. **RESTful API**  
-   외부 서비스와 연동할 수 있는 API 제공.
 
 ---
 
@@ -31,8 +29,6 @@ pip install -r requirements.txt
 ```bash
 MONGO_URI=mongodb://localhost:27017/data_market_db
 ```
-
----
 
 ```
 Data_Market_Platform/
