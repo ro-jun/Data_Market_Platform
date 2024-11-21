@@ -1,9 +1,28 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, request, jsonify, render_template
 
 # Blueprint 생성
-chatbot_blueprint = Blueprint("chatbot", __name__, template_folder="templates", static_folder="static")
+chatbot_blueprint = Blueprint(
+    "chatbot", 
+    __name__, 
+    template_folder="templates", 
+    static_folder="static"
+    )
 
-# 챗봇 페이지 라우트
-@chatbot_blueprint.route("/")
+# /chatbot/ 기본 페이지 처리
+@chatbot_blueprint.route("/", methods=["GET"])
 def chatbot():
-    return render_template("chatbot.html")  # hojun/chatbot/templates/chatbot.html 렌더링
+    return render_template("chatbot.html")
+
+# /chatbot/send 메시지 처리
+@chatbot_blueprint.route("/send", methods=["POST"])
+def send_message():
+    user_message = request.json.get("message")
+    if not user_message:
+        return jsonify({"reply": "메시지를 입력해주세요."})
+    
+    if "안녕" in user_message:
+        bot_reply = "안녕하세요! 무엇을 도와드릴까요?"
+    else:
+        bot_reply = f"'{user_message}'에 대한 답변을 준비 중입니다."
+    
+    return jsonify({"reply": bot_reply})
