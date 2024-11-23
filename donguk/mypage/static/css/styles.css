@@ -1,0 +1,132 @@
+.Ui {
+    width: 824px;
+    height: 481px;
+    position: relative;
+}
+
+.main-container {
+    width: 824px;
+    height: 478px;
+    position: absolute;
+    border: 10px black solid;
+    background: white;
+}
+
+.header {
+    width: 824px;
+    height: 58px;
+    background: #EADAAC;
+}
+
+.profile-image {
+    position: absolute;
+    left: 34px;
+    top: 107px;
+}
+
+.profile-image div {
+    color: black;
+    font-size: 30px;
+    font-family: Inter, sans-serif;
+    font-weight: 400;
+}
+
+.content-area {
+    width: 550px;
+    height: 324px;
+    left: 234px;
+    top: 126px;
+    position: absolute;
+    background: #D9D9D9;
+}
+
+.user-stats {
+    width: 176px;
+    height: 166px;
+    left: 20px;
+    top: 284px;
+    position: absolute;
+    background: white;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) inset;
+    border: 2px black solid;
+    padding: 10px;
+    font-size: 13px;
+    font-family: Inter, sans-serif;
+}
+
+.top-nav {
+    display: flex;
+    position: absolute;
+    left: 235px;
+    top: 83px;
+}
+
+.top-nav div {
+  margin-right: 10px;
+  padding: 5px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.40);
+  border-radius: 5px;
+  font-size: 11px; /* 15px에서 11px로 변경 */
+  font-weight: 700;
+}
+
+.user-info {
+    position: absolute;
+    right: 20px;
+    top: 3px;
+    font-size: 10px;
+}
+
+.user-info span {
+    margin-left: 10px;
+}
+
+.main-nav {
+    display: flex;
+    position: absolute;
+    left: 90px;
+    top: 33px;
+}
+
+.main-nav div {
+    margin-right: 20px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.logo {
+    width: 30px;
+    height: 30px;
+    left: 23px;
+    top: 25px;
+    position: absolute;
+    border: 1px black solid;
+    text-align: center;
+    line-height: 30px;
+    font-weight: 700;
+}
+
+.avatar {
+    width: 157px;
+    height: 157px;
+    left: 29px;
+    top: 93px;
+    position: absolute;
+    border-radius: 9.21px;
+    border: 0.58px #323232 solid;
+    overflow: hidden;
+}
+
+.data-management {
+    position: absolute;
+    left: 240px;
+    top: 162px;
+    width: 552px;
+    height: 319px;
+}
+
+.data-management h2 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}

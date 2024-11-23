@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="Ui">
+        <div class="main-container">
+            <div class="header"></div>
+            <div class="profile-image">
+                <div>대표 이미지</div>
+                <img class="Image" src="https://via.placeholder.com/146x140" alt="Profile Image">
+            </div>
+            <div class="content-area"></div>
+            <div class="user-stats">
+                <div>내 포인트: 100,000</div>
+                <div>구매 데이터 수: 100</div>
+                <div>찜한 데이터 수: 100</div>
+                <div>판매 데이터 수: 100</div>
+            </div>
+            <nav class="top-nav">
+                <div id="profile-btn">프로필</div>
+                <div id="purchase-data-btn">구매 데이터 관리</div>
+                <div id="wishlist-btn">찜한 데이터</div>
+                <div id="recent-view-btn">최근 본 데이터</div>
+                <div id="sales-data-btn">판매 데이터 관리</div>
+            </nav>
+            <div class="user-info">
+                <span>홍길동님</span>
+                <span>자료등록</span>
+                <span>고객센터</span>
+            </div>
+            <nav class="main-nav">
+                <div>데이터 찾기</div>
+                <div>삽니다</div>
+                <div>팝니다</div>
+                <div>무료 데이터</div>
+            </nav>
+            <div class="logo">로고</div>
+            <div class="avatar">
+                <img src="https://via.placeholder.com/157x157" alt="Avatar">
+            </div>
+            <div class="data-management">
+              <h2>구매 데이터 관리</h2>
+              <table>
+                <tr>
+                  <th>데이터 이름</th>
+                  <th>구매일</th>
+                  <th>파일 형식</th>
+                  <th>카테고리</th>
+                  <th>가격</th>
+                </tr>
+                <tr>
+                  <td>까마귀 울음소리</td>
+                  <td>2024/11/14</td>
+                  <td>ZIP(mp3)</td>
+                  <td>동물/조류</td>
+                  <td>1000 원</td>
+                </tr>
+                <!-- 추가 행 -->
+              </table>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+</body>
+</html>
