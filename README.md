@@ -9,8 +9,6 @@
    데이터를 등록, 검색, 구매 및 판매할 수 있는 기능 제공.
 2. **챗봇 기능**  
    사용자가 데이터를 쉽게 검색하고 관리할 수 있도록 지원.
-3. **RESTful API**  
-   외부 서비스와 연동할 수 있는 API 제공.
 
 ---
 
@@ -32,43 +30,63 @@ pip install -r requirements.txt
 MONGO_URI=mongodb://localhost:27017/data_market_db
 ```
 
----
-
 ```
-Data_Market_Platform/
-├── app.py               # Flask 애플리케이션 엔트리포인트
-├── requirements.txt     # 프로젝트 의존성 리스트
-├── .env                 # 환경 변수 파일
-├── README.md            # 프로젝트 설명 파일
-├── server/              # 서버 관련 코드
-│   ├── routes/          # Flask 라우트 관리
-│   │   ├── __init__.py  # 라우트 초기화
-│   │   ├── data.py      # 데이터 관련 라우트
-│   │   └── user.py      # 사용자 관련 라우트
-│   ├── models/          # 데이터베이스 모델 관리
-│   │   ├── __init__.py  # 모델 초기화
-│   │   ├── user.py      # 사용자 모델
-│   │   └── data.py      # 데이터 모델
-│   ├── services/        # 비즈니스 로직
-│   │   ├── __init__.py  # 서비스 초기화
-│   │   ├── data_service.py  # 데이터 처리 로직
-│   │   └── user_service.py  # 사용자 처리 로직
-│   └── utils/           # 유틸리티 함수
-│       ├── __init__.py  # 유틸 초기화
-│       ├── database.py  # MongoDB 연결 관리
-│       └── security.py  # 보안 관련 함수 (JWT 등)
-├── chatbot/             # 챗봇 관련 코드
-│   ├── __init__.py      # 챗봇 초기화
-│   ├── chatbot_service.py # 챗봇 동작 로직
-│   └── intents/         # 챗봇 대화 의도 파일
-│       └── base_intents.json
-├── frontend/            # 프런트엔드 관련 코드
-│   ├── index.html       # 메인 페이지
-│   ├── styles.css       # 스타일 시트
-│   └── scripts.js       # 자바스크립트 코드
-└── tests/               # 테스트 코드
-    ├── test_app.py      # 전체 애플리케이션 테스트
-    ├── test_routes.py   # 라우트 테스트
-    ├── test_models.py   # 데이터베이스 모델 테스트
-    └── test_chatbot.py  # 챗봇 테스트
+D:\Project\SYU\Data_Market_Platform
+├── .env                       # 환경 변수 파일
+├── .gitignore                 # Git 제외 파일 목록
+├── README.md                  # 프로젝트 설명 파일
+├── app.py                     # Flask 애플리케이션 엔트리포인트
+├── requirements.txt           # 프로젝트 의존성 리스트
+├── hojun/                     # 사용자 정의 기능
+│   ├── homepage/              # 홈페이지 관련 코드
+│   │   ├── __init__.py      # 홈페이지 관련 Blueprint
+│   │   ├── templates/         # HTML 템플릿 폴더
+│   │   │   └── homepage.html  # 홈페이지 템플릿
+│   │   └── static/            # 정적 파일 폴더
+│   │       ├── css/
+│   │       │   └── homepage.css   # 홈페이지 스타일
+│   │       ├── js/
+│   │       │   └── homepage.js    # 홈페이지 스크립트
+│   │       └── images/
+│   │           └── homepage-banner.jpg # 홈페이지 배너 이미지
+│   └── chatbot/               # 챗봇 관련 코드
+│       ├── __init__.py      # 챗봇 관련 Blueprint
+│       ├── templates/         # HTML 템플릿 폴더
+│       │   └── chatbot.html   # 챗봇 템플릿
+│       └── static/            # 정적 파일 폴더
+│           ├── css/
+│           │   └── chatbot.css    # 챗봇 스타일
+│           ├── js/
+│           │   └── chatbot.js     # 챗봇 스크립트
+│           └── images/
+│               ├── chatbot-icon.png    # 챗봇 아이콘
+│               └── chatbot-background.jpg # 챗봇 배경 이미지
+├── mypage/                    # 다른 팀원이 관리하는 기능
+│   ├── templates/
+│   │   └── profile.html       # 사용자 프로필 페이지
+│   └── static/
+│       ├── css/
+│       │   └── styles.css     # 프로필 전용 스타일
+│       ├── js/
+│       │   └── scripts.js     # 프로필 전용 스크립트
+│       └── images/
+│           └── profile.jpg    # 프로필 이미지
+├── server/                    # 서버 관련 코드
+│   ├── models/                # 데이터베이스 모델 관리
+│   │   ├── __init__.py        # 모델 초기화
+│   │   ├── data.py            # 데이터 모델
+│   │   └── user.py            # 사용자 모델
+│   ├── routes/                # 라우트 관리
+│   │   ├── __init__.py        # 라우트 초기화
+│   │   ├── data.py            # 데이터 관련 라우트
+│   │   └── user.py            # 사용자 관련 라우트
+│   ├── services/              # 비즈니스 로직
+│   │   ├── __init__.py        # 서비스 초기화
+│   │   ├── data_service.py    # 데이터 서비스
+│   │   └── user_service.py    # 사용자 서비스
+│   └── utils/                 # 유틸리티 함수
+│       ├── __init__.py        # 유틸 초기화
+│       ├── database.py        # MongoDB 연결 관리
+│       └── security.py        # 보안 관련 함수 (JWT 등)
+
 ```
