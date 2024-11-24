@@ -14,6 +14,26 @@ function addMessage(message, sender = "user") {
     messagesSection.scrollTop = messagesSection.scrollHeight; // 스크롤을 가장 아래로 이동
 }
 
+// 검색 결과를 추가하는 함수
+function addRecommendations(recommendations) {
+    const recommendationDiv = document.createElement("div");
+    recommendationDiv.classList.add("recommendations");
+
+    // 검색 결과 리스트 생성
+    recommendations.forEach((rec) => {
+        const recItem = document.createElement("div");
+        recItem.classList.add("recommendation-item");
+        recItem.innerHTML = `
+            <strong>${rec.id}</strong> - Score: ${rec.score.toFixed(2)}<br>
+            <p>${rec.metadata.description}</p>
+        `;
+        recommendationDiv.appendChild(recItem);
+    });
+
+    messagesSection.appendChild(recommendationDiv);
+    messagesSection.scrollTop = messagesSection.scrollHeight; // 스크롤을 가장 아래로 이동
+}
+
 // 서버에서 전달된 메세지 불러오기
 fetch("/chatbot/history", {
     method: "GET",
@@ -22,7 +42,7 @@ fetch("/chatbot/history", {
     .then((data) => {
         data.history.forEach((msg) => addMessage(msg.content, msg.role));
     });
-    
+
 // 버튼 클릭 이벤트
 sendButton.addEventListener("click", () => {
     const message = userInput.value.trim();
@@ -43,13 +63,25 @@ sendButton.addEventListener("click", () => {
         },
         body: JSON.stringify({ message: message }),
     })
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("서버 응답에 문제가 있습니다.");
+            }
+            return response.json();
+        })
         .then((data) => {
             if (data.reply) {
-                // 챗봇 응답 메시지 추가
                 addMessage(data.reply, "bot");
+            }
+            if (data.recommendations && data.recommendations.length > 0) {
+                data.recommendations.forEach((rec) => {
+                    addMessage(
+                        `추천 데이터: ${rec.id}, 설명: ${rec.description}, 점수: ${rec.score}`,
+                        "bot"
+                    );
+                });
             } else {
-                addMessage("오류가 발생했습니다.", "bot");
+                addMessage("추천 결과가 없습니다.", "bot");
             }
         })
         .catch((error) => {
