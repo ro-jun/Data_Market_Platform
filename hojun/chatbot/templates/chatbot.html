@@ -5,21 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Market Platform - Chatbot</title>
     <link rel="stylesheet" href="{{ url_for('chatbot.static', filename='css/chatbot.css') }}">
+    <!-- Font Awesome 추가 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <!-- 메인 컨테이너 -->
     <div class="chatbot-container">
         <!-- 왼쪽 채팅 내역 -->
         <aside class="chat-history">
-            <h3>채팅 내역</h3>
+            <!-- 새 채팅하기 버튼 -->
+            <button id="new-chat-btn" class="new-chat-btn">
+                <i class="fas fa-plus-circle"></i> 새 채팅하기
+            </button>
+            <h3>
+                <i class="fas fa-history"></i> 채팅 내역
+            </h3>
             <ul>
-                <li>검색 기록 1</li>
-                <li>검색 기록 2</li>
-                <li>검색 기록 3</li>
-                <li>검색 기록 4</li>
-                <li>검색 기록 5</li>
-                <li>검색 기록 6</li>
-                <li>검색 기록 7</li>
+                <!-- 채팅 기록 동적 추가 -->
             </ul>
         </aside>
 
@@ -28,11 +30,11 @@
             <!-- 유저 정보 -->
             <div class="user-info">
                 <div class="user-profile">
-                    <img src="{{ url_for('chatbot.static', filename='images/user-icon.png') }}" alt="User Icon">
+                    <i class="fas fa-user-circle user-icon"></i> <!-- 유저 아이콘 -->
                     <span id="user-id">user_001</span>
                 </div>
                 <div class="settings">
-                    <img src="{{ url_for('chatbot.static', filename='images/settings-icon.png') }}" alt="Settings Icon">
+                    <i class="fas fa-cog settings-icon"></i> <!-- 설정 아이콘 -->
                 </div>
             </div>
 
@@ -44,15 +46,9 @@
             <!-- 입력 공간 -->
             <div class="input-section">
                 <textarea id="user-input" placeholder="찾으시는 데이터의 내용 혹은 데이터 사용 목적을 작성해 주세요."></textarea>
-                <button id="send-btn" class="send-btn">전송</button>
-            </div>
-
-            <!-- 추천 응답 -->
-            <div class="response-suggestions">
-                <button>개구리 사진 데이터 찾아줘</button>
-                <button>올린 파일과 비슷한 데이터 찾아줘</button>
-                <button>스마트폰 중독 관련 데이터 찾아줘</button>
-                <button>운동과 공부의 연관성을 조사해야 해</button>
+                <button id="send-btn" class="send-btn">
+                    <i class="fas fa-paper-plane"></i> 전송
+                </button>
             </div>
         </section>
     </div>
