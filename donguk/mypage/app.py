@@ -10,8 +10,9 @@ def format_number(value):
     except ValueError:
         return value
 
-@app.route('/')
+@app.route('/mypage')
 def profile():
+    # 추후 DB랑 연결 할 것.
     user_data = {
         "name": "홍길동",
         "email": "honggildong@syuin.ac.kr",
@@ -19,6 +20,7 @@ def profile():
         "points": 100000,  # 숫자 그대로 전달
     }
     return render_template('profile.html', user=user_data)
-#hihi
+
+@app.route('/datainsert')
 if __name__ == '__main__':
     app.run(debug=True)
