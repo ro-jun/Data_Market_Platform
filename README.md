@@ -30,7 +30,7 @@ pip install -r requirements.txt
 MONGO_URI=mongodb://localhost:27017/data_market_db
 ```
 
-```
+```plaintext
 D:\Project\SYU\Data_Market_Platform
 ├── .env                       # 환경 변수 파일
 ├── .gitignore                 # Git 제외 파일 목록
@@ -39,7 +39,7 @@ D:\Project\SYU\Data_Market_Platform
 ├── requirements.txt           # 프로젝트 의존성 리스트
 ├── hojun/                     # 사용자 정의 기능
 │   ├── homepage/              # 홈페이지 관련 코드
-│   │   ├── __init__.py      # 홈페이지 관련 Blueprint
+│   │   ├── __init__.py        # 홈페이지 관련 Blueprint
 │   │   ├── templates/         # HTML 템플릿 폴더
 │   │   │   └── homepage.html  # 홈페이지 템플릿
 │   │   └── static/            # 정적 파일 폴더
@@ -50,17 +50,21 @@ D:\Project\SYU\Data_Market_Platform
 │   │       └── images/
 │   │           └── homepage-banner.jpg # 홈페이지 배너 이미지
 │   └── chatbot/               # 챗봇 관련 코드
-│       ├── __init__.py      # 챗봇 관련 Blueprint
+│       ├── __init__.py        # 챗봇 관련 Blueprint
 │       ├── templates/         # HTML 템플릿 폴더
 │       │   └── chatbot.html   # 챗봇 템플릿
-│       └── static/            # 정적 파일 폴더
-│           ├── css/
-│           │   └── chatbot.css    # 챗봇 스타일
-│           ├── js/
-│           │   └── chatbot.js     # 챗봇 스크립트
-│           └── images/
-│               ├── chatbot-icon.png    # 챗봇 아이콘
-│               └── chatbot-background.jpg # 챗봇 배경 이미지
+│       ├── static/            # 정적 파일 폴더
+│       │   ├── css/
+│       │   │   └── chatbot.css    # 챗봇 스타일
+│       │   ├── js/
+│       │   │   └── chatbot.js     # 챗봇 스크립트
+│       │   └── images/
+│       │       ├── chatbot-icon.png    # 챗봇 아이콘
+│       │       └── chatbot-background.jpg # 챗봇 배경 이미지
+│       ├── llm_chain_setup.py   # LLM 체인 설정 파일
+│       ├── llm_setup.py         # LLM 설정 파일
+│       ├── similar_search.py    # 유사 검색 기능 구현
+│       └── vector_db_setup.py   # 벡터 데이터베이스 설정
 ├── mypage/                    # 다른 팀원이 관리하는 기능
 │   ├── templates/
 │   │   └── profile.html       # 사용자 프로필 페이지
