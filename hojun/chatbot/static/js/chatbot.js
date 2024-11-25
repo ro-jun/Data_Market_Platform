@@ -43,7 +43,7 @@ fetch("/chatbot/history", {
         data.history.forEach((msg) => addMessage(msg.content, msg.role));
     });
 
-// 버튼 클릭 이벤트
+// 서버로 메시지 전송 및 응답 처리
 sendButton.addEventListener("click", () => {
     const message = userInput.value.trim();
     if (!message) {
@@ -72,16 +72,6 @@ sendButton.addEventListener("click", () => {
         .then((data) => {
             if (data.reply) {
                 addMessage(data.reply, "bot");
-            }
-            if (data.recommendations && data.recommendations.length > 0) {
-                data.recommendations.forEach((rec) => {
-                    addMessage(
-                        `추천 데이터: ${rec.id}, 설명: ${rec.description}, 점수: ${rec.score}`,
-                        "bot"
-                    );
-                });
-            } else {
-                addMessage("추천 결과가 없습니다.", "bot");
             }
         })
         .catch((error) => {

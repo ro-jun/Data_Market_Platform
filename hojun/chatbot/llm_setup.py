@@ -4,7 +4,7 @@ import os
 
 # 환경 변수 로드
 load_dotenv()
-openai_api_key=os.getenv("OPENAI_hojun_api")  # API 키
+openai_api_key=os.getenv("OPENAI_api_key")  # API 키
 
 # OpenAI Embeddings 설정
 embeddings = OpenAIEmbeddings(
