@@ -1,0 +1,41 @@
+.item-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    margin: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.item-card:hover {
+    transform: scale(1.05);
+}
+
+.item-category {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.item-name {
+    font-size: 1.1em;
+    color: #333;
+}
+
+.container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+form {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form input {
+    width: calc(100% - 120px);
+    margin-right: 10px;
+}
