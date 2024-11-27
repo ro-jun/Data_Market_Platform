@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>데이터 관리</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+  <div class="container">
+    <!-- 상단 네비게이션 -->
+    <header class="header">
+      <div class="logo">
+        <button class="login-btn">로그인</button>
+      </div>
+      <nav class="nav">
+        <a href="#">데이터 찾기</a>
+        <a href="#">삽니다</a>
+        <a href="#">팝니다</a>
+        <a href="#">무료 데이터</a>
+      </nav>
+      <div class="user-info">
+        <span>홍길동님</span>
+        <a href="#">자료등록</a>
+        <a href="#">고객센터</a>
+      </div>
+    </header>
+
+    <div class="content">
+      <!-- 사이드바 -->
+      <aside class="sidebar">
+        <div class="sidebar-content">
+          <h2>프로필</h2>
+          <img src="profile.jpg" alt="프로필 사진" class="profile-img">
+          <p>홍길동님</p>
+          <p>내 포인트: 100,000</p>
+          <p>구매 데이터 수: 100</p>
+          <p>판매 데이터 수: 100</p>
+        </div>
+      </aside>
+
+
+    <!-- 메인 컨텐츠 -->
+    <main class="main-content">
+      <div class="tabs">
+        <button class="tab-btn active">프로필</button>
+        <button class="tab-btn">구매 데이터 관리</button>
+        <button class="tab-btn">찜한 데이터</button>
+        <button class="tab-btn">최근 본 데이터</button>
+        <button class="tab-btn">판매 데이터 관리</button>
+      </div>
+
+      <div class="profile-section">
+        <img src="profile.jpg" alt="프로필 이미지" class="main-profile-img">
+        <h2>홍길동 님</h2>
+        <p>이메일: hongildong@syuin.ac.kr</p>
+        <p>전화번호: 010-1234-5678</p>
+        <p>포인트: <strong>100,000</strong> <button class="purchase-btn">구매</button></p>
+        <a href="#" class="edit-link">개인 정보 수정</a> |
+        <a href="#" class="link-account">계정 연동</a>
+      </div>
+    </main>
+  </div>
+        <!-- 푸터 -->
+  <footer class="footer">
+      <p>© 2024 Data Market Platform. All Rights Reserved.</p>
+  </footer>
+  <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+
+</html>

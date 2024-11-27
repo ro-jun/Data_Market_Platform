@@ -1,0 +1,135 @@
+/* 기본 스타일 */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* 전체 레이아웃 */
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  width: 100%;
+  padding: 20px 30px;
+  background-color: #f4e3c1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #d2b48c;
+}
+
+.header .logo {
+  display: flex;
+  align-items: center;
+}
+
+.header .login-btn {
+  background-color: #8e44ad;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.header .nav {
+  display: flex;
+  gap: 30px;
+}
+
+.header .nav a {
+  text-decoration: none;
+  color: black;
+  font-size: 1.2em;
+}
+
+.header .user-info {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.header .user-info span {
+  font-size: 1.2em;
+  color: black;
+}
+
+.header .user-info a {
+  color: #8e44ad;
+  font-size: 1.1em;
+  text-decoration: none;
+}
+
+/* 메인 콘텐츠 레이아웃 */
+.content {
+  display: flex;
+  padding: 30px;
+  gap: 20px;
+  flex: 1;
+}
+
+/* 사이드바 */
+.sidebar {
+  width: 300px;  /* 사이드바 너비 조정 */
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sidebar h2 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+.sidebar .profile-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+}
+
+.sidebar p {
+  font-size: 1em;
+  color: #333;
+  margin: 5px 0;
+}
+
+/* 본문 영역 */
+.main-content {
+  flex: 1;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 반응형 설정 (화면 크기 조정) */
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .header .nav {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .header .user-info {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
