@@ -1,29 +1,29 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request
+import os
 
 app = Flask(__name__)
+UPLOAD_FOLDER = 'static/uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if request.method == 'POST':
+        title = request.form['title']
+        price = request.form['price']
+        category = request.form['category']
+        description = request.form['description']
+        files = request.files.getlist('files[]')
 
-# 사용자 정의 필터 생성
-@app.template_filter('number')
-def format_number(value):
-    try:
-        return "{:,}".format(value)
-    except ValueError:
-        return value
+        # 파일 저장
+        file_names = []
+        for file in files:
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+            file_names.append(file.filename)
 
-# @app.route('/datainsert')
+        return f"등록 성공! 제목: {title}, 가격: {price}, 분류: {category}, 설명: {description}, 파일: {file_names}"
 
-@app.route('/')
-def profile():
-    # 추후 DB랑 연결 할 것.
-    user_data = {
-        "name": "홍길동",
-        "email": "honggildong@syuin.ac.kr",
-        "phone": "010-1234-5678",
-        "points": 100000,  # 숫자 그대로 전달
-    }
-    return render_template('profile.html', user=user_data)
+    return render_template('upload.html')
 
-#
 if __name__ == '__main__':
     app.run(debug=True)

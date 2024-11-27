@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>데이터 등록</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">로고</div>
+        <nav class="nav">
+            <a href="#">데이터 찾기</a>
+            <a href="#">삽니다</a>
+            <a href="#" class="active">팝니다</a>
+            <a href="#">무료 데이터</a>
+        </nav>
+        <div class="user-info">
+            <span>홍길동님</span>
+            <a href="#">자료등록</a>
+            <a href="#">고객센터</a>
+        </div>
+    </header>
+    <main class="content">
+        <div class="upload-section">
+            <h1>데이터 등록</h1>
+            <form action="/upload" method="POST" enctype="multipart/form-data" id="data-form">
+                <!-- 데이터 제목 -->
+                <div>
+                    <label for="title">데이터 제목</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                <!-- 데이터 가격 -->
+                <div>
+                    <label for="price">데이터 가격</label>
+                    <input type="number" id="price" name="price" required> 원
+                </div>
+                <!-- 분류 -->
+                <div>
+                    <label for="category">분류</label>
+                    <select id="category" name="category" required>
+                        <option value="경제/금융">경제/금융</option>
+                        <option value="보건/복지">보건/복지</option>
+                        <option value="교육/학습">교육/학습</option>
+                        <option value="교통/통계">교통/통계</option>
+                        <option value="환경/기상">환경/기상</option>
+                    </select>
+                </div>
+                <!-- 설명 -->
+                <div>
+                    <label for="description">설명</label>
+                    <textarea id="description" name="description" rows="4" required></textarea>
+                </div>
+                <!-- 추가 파일 -->
+                <div class="file-upload">
+                    <div class="dropzone" id="dropzone">
+                        <p>+ 추가 파일</p>
+                    </div>
+                    <input type="file" name="files[]" id="files" class="file-input-hidden" multiple>
+                    <ul id="file-list"></ul>
+                </div>
+                <button type="submit" class="upload-button">등록</button>
+            </form>
+        </div>
+    </main>
+        <div id="popup" class="popup hidden">
+        <div class="popup-content">
+            <p>등록이 완료되었습니다!</p>
+            <button id="close-popup">확인</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>
