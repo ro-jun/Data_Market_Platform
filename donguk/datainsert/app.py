@@ -1,6 +1,7 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
+
 
 # 사용자 정의 필터 생성
 @app.template_filter('number')
