@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>데테크 - 데이터 찾기</title>
+    <link rel="stylesheet" href="{{ url_for('categorySearch.static', filename='css/categorySearch.css') }}">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div class="logo">데테크</div>
+                <ul class="nav-links">
+                    <li><a href="#">데이터 찾기</a></li>
+                    <li><a href="#">산다</a></li>
+                    <li><a href="#">팔다</a></li>
+                    <li><a href="#">무료 데이터</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <button>자료등록</button>
+                    <button>고객센터</button>
+                    <button>로그인</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="search-section">
+            <div class="search-container">
+                <input type="text" placeholder="원하신 데이터를 검색하세요.">
+                <select>
+                    <option value="">카테고리</option>
+                    <!-- 더 많은 카테고리 선택사항을 추가하세요 -->
+                </select>
+                <button>찾기</button>
+            </div>
+        </section>
+
+        <section class="products-section">
+            <div class="products-container">
+                <!-- 제품 사진 두어 공유 -->
+                <div class="product-card">
+                    <img src="{{ url_for('categorySearch.static', filename='images/homepage-banner.jpg') }}" alt="Sneakers">
+                    <div class="product-info">
+                        <p class="category">Clothing & Shoes</p>
+                        <h3>SNEAKERS</h3>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="{{ url_for('categorySearch.static', filename='images/homepage-banner.jpg') }}" alt="Sofa">
+                    <div class="product-info">
+                        <p class="category">Home & Living</p>
+                        <h3>SOFA</h3>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="{{ url_for('categorySearch.static', filename='images/homepage-banner.jpg') }}" alt="Toy Train">
+                    <div class="product-info">
+                        <p class="category">Toys & Entertainment</p>
+                        <h3>TOY TRAIN</h3>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="{{ url_for('categorySearch.static', filename='images/homepage-banner.jpg') }}" alt="Party Decors">
+                    <div class="product-info">
+                        <p class="category">Toys & Entertainment</p>
+                        <h3>PARTY DECORS</h3>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="{{ url_for('categorySearch.static', filename='images/homepage-banner.jpg') }}" alt="Diamond Ring">
+                    <div class="product-info">
+                        <p class="category">Jewelry & Accessories</p>
+                        <h3>DIAMOND RING</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>
