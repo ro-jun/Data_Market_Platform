@@ -5,49 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Market Platform</title>
     <link rel="stylesheet" href="{{ url_for('homepage.static', filename='css/homepage.css') }}">
+    <!-- Owl Carousel CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+
+    <!-- jQuery (필수) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Owl Carousel JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 </head>
 <body>
     {% extends 'base.html' %}
     {% block content %}
-    <!-- 헤더 -->
-    <!-- <header class="header">
-        <div class="top-bar">
-            <div class="nav-center">
-                <a href="#">데이터 찾기</a>
-                <a href="#">삽니다</a>
-                <a href="#">팝니다</a>
-                <a href="#">무료 데이터</a>
-            </div>
-            <div class="nav-right">
-                <a href="#">로그인</a>
-                <a href="#">회원가입</a>
-                <a href="#">자료등록</a>
-                <a href="#">고객센터</a>
-            </div>
-        </div>
-    </header> -->
-
     <!-- 메인 섹션 -->
     <section class="main-section">
         <div class="main-section-top">
             <div class="main-section-left">
-                <!-- 왼쪽 섹션 콘텐츠 -->
-                <div class="main_popzone_roll owl-carousel owl-loaded">
-                    <!-- 슬라이더 콘텐츠 -->
-                    <div class="owl-stage-outer">
-                        <div class="owl-stage">
-                            <div class="owl-item">
-                                <div class="item">
-                                    <a href="#">
-                                        <div class="visual-info">
-                                            <p class="img"><img src="/path/to/image.jpg" alt="배너 이미지"></p>
-                                            <p class="info">배너 설명</p>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <!-- 추가 슬라이더 아이템 -->
-                        </div>
+                <!-- 슬라이더 콘텐츠 -->
+                <div class="owl-carousel">
+                    <div class="item">
+                        <a href="https://data.seoul.go.kr/etc/offerReqst.do">
+                            <img src="{{ url_for('static', filename='hojun\homepage\static\images\city.png')}}" alt="배너 1">
+                            <p>필요한 데이터가 없을 때! 공공데이터 제공신청</p>
+                        </a>
+                    </div>
+                    <div class="item">
+                        <a href="https://bigdata.seoul.go.kr/">
+                            <img src="{{ url_for('static', filename='hojun\homepage\static\images\finance.png')}}" alt="배너 2">
+                            <p>빅데이터 캠퍼스에 데이터 보러 가자!</p>
+                        </a>
                     </div>
                 </div>
                 <!-- 검색 바 -->
@@ -79,28 +66,41 @@
         </div>
     
         <div class="main-section-middle">
-            <!-- 카테고리 섹션 -->
-            <div class="category-section">
-                <a href="#">
-                    <img src="{{ url_for('static', filename='homepage/images/city.png') }}" alt="도시/지역">
-                    <span>도시/지역</span>
-                </a>
-                <a href="#">
-                    <img src="{{ url_for('static', filename='homepage/images/industry.png') }}" alt="산업/고용">
-                    <span>산업/고용</span>
-                </a>
-                <a href="#">
-                    <img src="{{ url_for('static', filename='homepage/images/finance.png') }}" alt="경제/금융">
-                    <span>경제/금융</span>
-                </a>
-                <a href="#">
-                    <img src="{{ url_for('static', filename='homepage/images/security.png') }}" alt="행정/안보">
-                    <span>행정/안보</span>
-                </a>
-                <a href="#">
-                    <img src="{{ url_for('static', filename='homepage/images/education.png') }}" alt="교육">
-                    <span>교육</span>
-                </a>
+            <div class="carousel">
+                <button class="prev-btn">◀</button>
+                <div class="carousel-track-container">
+                    <ul class="carousel-track">
+                        <li class="carousel-item">
+                            <img src="{{ url_for('static', filename='homepage/images/city.png') }}" alt="도시/지역">
+                            <p>도시/지역</p>
+                        </li>
+                        <li class="carousel-item">
+                            <img src="{{ url_for('static', filename='homepage/images/industry.png') }}" alt="산업/고용">
+                            <p>산업/고용</p>
+                        </li>
+                        <li class="carousel-item">
+                            <img src="{{ url_for('static', filename='homepage/images/finance.png') }}" alt="경제/금융">
+                            <p>경제/금융</p>
+                        </li>
+                        <li class="carousel-item">
+                            <img src="{{ url_for('static', filename='homepage/images/security.png') }}" alt="행정/안보">
+                            <p>행정/안보</p>
+                        </li>
+                        <li class="carousel-item">
+                            <img src="{{ url_for('static', filename='homepage/images/education.png') }}" alt="교육">
+                            <p>교육</p>
+                        </li>
+                        <li class="carousel-item">
+                            <img src="{{ url_for('static', filename='homepage/images/education.png') }}" alt="교육">
+                            <p>교육</p>
+                        </li>
+                        <li class="carousel-item">
+                            <img src="{{ url_for('static', filename='homepage/images/education.png') }}" alt="교육">
+                            <p>교육</p>
+                        </li>
+                    </ul>
+                </div>
+                <button class="next-btn">▶</button>
             </div>
 
             <!-- 로그인 안내 -->
@@ -117,6 +117,7 @@
             </div>
         </div>
     </section>
+    <script src="{{ url_for('static', filename='homepage/js/homepage.js') }}"></script>
     {% endblock %}
 </body>
 </html>

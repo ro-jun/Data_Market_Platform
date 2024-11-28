@@ -27,19 +27,32 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     min-height: 300px; /* 최소 높이 지정 */
+    z-index: 0; /* 우선 순위 낮추기 */
+    position: relative;
 }
 
-.main_popzone_roll {
-    width: 100%;
-    height: auto; /* 이미지 비율 유지 */
-    margin-bottom: 20px;
-    overflow: hidden;
+.owl-carousel {
+    z-index: 1; /* 낮은 우선 순위 */
+    position: relative;
+    background-color: #f0f5ff;
+    padding: 20px;
+    border-radius: 8px;
+    min-height: 300px;
 }
 
-.main_popzone_roll img {
-    width: 100%; /* 부모 요소 크기에 맞게 이미지 확대 */
+.owl-carousel .item {
+    text-align: center;
+    padding: 10px;
+    background: #f5f5f5;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.owl-carousel .item img {
+    max-width: 100%;
     height: auto;
-    display: block;
+    border-radius: 5px;
+    margin-bottom: 10px;
 }
 
 /* 검색 섹션 */
@@ -71,54 +84,106 @@ body {
     cursor: pointer;
 }
 
-/* 오른쪽 섹션 */
-.main-section-right {
-    flex: 1; /* 오른쪽 섹션을 좁게 */
-    background-color: #f5f5f5;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    text-align: center;
-    min-height: 300px; /* 최소 높이 지정 */
-}
-
-.main-section-right p {
-    margin: 0;
-    color: #333;
-    font-weight: bold;
-}
-
 .main-section-middle {
     display: flex; /* Flexbox 활성화 */
     justify-content: space-between; /* 좌우 섹션 간 간격 균등 */
     align-items: flex-start; /* 위쪽 정렬 */
     gap: 20px; /* 두 섹션 간 간격 추가 */
+    padding: 20px;
 }
 
+/* 카테고리 섹션 */
 .category-section {
-    flex: 2; /* 왼쪽 섹션을 더 넓게 */
-    background-color: #fff;
     padding: 20px;
+    flex: 2; /* 왼쪽 섹션을 더 넓게 */
+    display: flex;
+    justify-content: space-around;
+    align-items: center; /* 위쪽 정렬 */
+    background-color: #fff;
+    border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    min-height: 200px; /* 최소 높이 지정 */
 }
 
-.login-section {
-    flex: 1; /* 왼쪽 섹션을 더 넓게 */
-    background-color: #fff;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+.category-section a {
+    text-align: center; /* 텍스트와 이미지 중앙 정렬 */
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    flex-direction: column; /* 세로 방향으로 정렬 */
+    align-items: center; /* 세로 정렬 시 중앙에 배치 */
+    gap: 10px; /* 이미지와 텍스트 간격 */
+}
+
+.carousel {
+    display: flex;
+    flex: 2; /* 왼쪽 섹션을 더 넓게 */
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 80%;
+    margin: auto;
+}
+
+.carousel-track-container {
+    overflow: hidden;
+    width: 100%;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.carousel-item {
+    flex: 0 0 20%; /* 한 번에 보이는 아이템 개수 */
+    text-align: center;
+    padding: 10px;
+}
+
+.carousel-item img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+}
+
+.prev-btn,
+.next-btn {
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.prev-btn {
+    left: -30px;
+}
+
+.next-btn {
+    right: -30px;
 }
 
 /* 데이터 숫자 섹션 (오른쪽 내부) */
 .data-info-box {
+    flex: 1;
     background-color: #f0f5ff;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
     font-family: Arial, sans-serif;
+    min-height: 320px; /* 높이 수정 */
+    position: relative; /* 위치 설정 */
+    z-index: 100; /* 높은 우선 순위 */
+    overflow: visible; /* 숨겨진 내용 표시 */
 }
 
 .data-item {
@@ -160,44 +225,17 @@ hr {
     color: #6c63ff;
 }
 
-/* 카테고리 섹션 */
-.category-section {
-    display: flex;
-    justify-content: space-around;
-    align-items: center; /* 위쪽 정렬 */
-    margin-top: 30px;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    min-height: 300px; /* 최소 높이 지정 */
-}
-
-.category-section a {
-    text-align: center; /* 텍스트와 이미지 중앙 정렬 */
-    text-decoration: none;
-    color: #333;
-    display: flex;
-    flex-direction: column; /* 세로 방향으로 정렬 */
-    align-items: center; /* 세로 정렬 시 중앙에 배치 */
-    gap: 10px; /* 이미지와 텍스트 간격 */
-}
-
-.category-section img {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 10px;
-}
-
 /* 로그인 안내 섹션 */
 .login-section {
+    flex: 1; /* 왼쪽 섹션을 더 넓게 */
     background-color: #e8f0ff; /* 배경색 */
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
     width: 300px;
     margin: 0 auto; /* 가운데 정렬 */
+    min-height: 200px; /* 최소 높이 지정 */
     border: 1px solid #ddd; /* 테두리 */
 }
 
