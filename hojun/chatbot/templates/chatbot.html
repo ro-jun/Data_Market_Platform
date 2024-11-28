@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="{{ url_for('chatbot.static', filename='css/chatbot.css') }}">
 </head>
 <body>
+    {% extends 'base.html' %}
+    {% block content %}
     <!-- 메인 컨테이너 -->
     <div class="chatbot-container">
         <!-- 왼쪽 채팅 내역 -->
@@ -58,5 +60,6 @@
     </div>
 
     <script src="{{ url_for('chatbot.static', filename='js/chatbot.js') }}"></script>
+    {% endblock %}
 </body>
 </html>

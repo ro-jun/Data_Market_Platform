@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="{{ url_for('homepage.static', filename='css/homepage.css') }}">
 </head>
 <body>
+    {% extends 'base.html' %}
+    {% block content %}
     <!-- 헤더 -->
     <header class="header">
         <div class="logo">
@@ -60,5 +62,6 @@
     <footer class="footer">
         <p>© 2024 Data Market Platform. All Rights Reserved.</p>
     </footer>
+    {% endblock %}
 </body>
 </html>

@@ -53,29 +53,48 @@ body {
     color: #007bff;
 }
 
-/* 메인 버튼 섹션 */
-.main-buttons {
+/* 네비게이션 섹션 */
+.nav-container {
     display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
-    padding: 20px 0;
-    background-color: #f8f9fa;
-    border-radius: 8px;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
-.main-btn {
-    padding: 15px 30px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #007bff;
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.nav-links {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links li {
+    display: inline;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.nav-buttons button {
+    background-color: #333;
+    color: white;
     border: none;
-    border-radius: 5px;
+    padding: 10px 15px;
+    margin-left: 10px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
-.main-btn:hover {
-    background-color: #0056b3;
+.nav-buttons button:hover {
+    background-color: #555;
 }
 
 /* 통계 섹션 */

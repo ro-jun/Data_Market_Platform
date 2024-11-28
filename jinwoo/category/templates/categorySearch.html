@@ -1,33 +1,90 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Category List</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/category/styles.css">
+    <title>데테크 - 데이터 찾기</title>
+    <link rel="stylesheet" href="{{ url_for('categorySearch.static', filename='css/categorySearch.css') }}">
 </head>
+
 <body>
-<div class="container">
-    <h1 class="my-4">데덤크 - 데이터 찾기</h1>
-    <form action="/category/search" method="get" class="form-inline my-4">
-        <input type="text" name="query" class="form-control mr-sm-2" placeholder="검색어를 입력하세요">
-        <button type="submit" class="btn btn-primary">찾기</button>
-    </form>
-
-    <div class="row">
-        {% for item in items %}
-        <div class="col-md-3">
-            <div class="item-card">
-                <div class="item-category">{{ item.category }}</div>
-                <div class="item-name">{{ item.name }}</div>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div class="logo">데테크</div>
+                <ul class="nav-links">
+                    <li><a href="#">데이터 찾기</a></li>
+                    <li><a href="#">산다</a></li>
+                    <li><a href="#">팔다</a></li>
+                    <li><a href="#">무료 데이터</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <button>자료등록</button>
+                    <button>고객센터</button>
+                    <button>로그인</button>
+                </div>
             </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
+        </nav>
+    </header>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <main>
+        <section class="search-section">
+            <div class="search-container">
+                <input type="text" placeholder="원하신 데이터를 검색하세요.">
+                <select>
+                    <option value="">카테고리</option>
+                    <!-- 더 많은 카테고리 선택사항을 추가하세요 -->
+                </select>
+                <button>찾기</button>
+            </div>
+        </section>
+
+        <section class="products-section">
+            <div class="products-container">
+                <!-- 제품 사진 두어 공유 -->
+                <div class="product-card">
+                    <img src="{{ url_for('categorySearch.static', filename='images/homepage-banner.jpg') }}" alt="Sneakers">
+                    <div class="product-info">
+                        <p class="category">Clothing & Shoes</p>
+                        <h3>SNEAKERS</h3>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="{{ url_for('categorySearch.static', filename='images/homepage-banner.jpg') }}" alt="Sofa">
+                    <div class="product-info">
+                        <p class="category">Home & Living</p>
+                        <h3>SOFA</h3>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="{{ url_for('categorySearch.static', filename='images/homepage-banner.jpg') }}" alt="Toy Train">
+                    <div class="product-info">
+                        <p class="category">Toys & Entertainment</p>
+                        <h3>TOY TRAIN</h3>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="{{ url_for('categorySearch.static', filename='images/homepage-banner.jpg') }}" alt="Party Decors">
+                    <div class="product-info">
+                        <p class="category">Toys & Entertainment</p>
+                        <h3>PARTY DECORS</h3>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="{{ url_for('categorySearch.static', filename='images/homepage-banner.jpg') }}" alt="Diamond Ring">
+                    <div class="product-info">
+                        <p class="category">Jewelry & Accessories</p>
+                        <h3>DIAMOND RING</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 </body>
+
 </html>
