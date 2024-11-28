@@ -2,60 +2,67 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
+    background-color: #f9f9f9;
 }
 
-/* 헤더 */
-.header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #fff;
-    padding: 10px 20px;
-    border-bottom: 1px solid #ddd;
+/* 메인 섹션 스타일 */
+.main-section {
+    padding: 20px;
 }
 
-.header .logo img {
-    height: 50px;
+/* Flexbox 컨테이너 */
+.main-section-top {
+    display: flex; /* Flexbox 활성화 */
+    justify-content: space-between; /* 좌우 정렬 */
+    align-items: stretch; /* 높이 동일하게 설정 */
+    gap: 20px; /* 섹션 간 간격 */
+    padding: 20px;
 }
 
-.navigation ul {
-    list-style: none;
-    display: flex;
-    margin: 0;
-    padding: 0;
+/* 왼쪽 섹션 */
+.main-section-left {
+    flex: 2; /* 왼쪽 섹션을 더 넓게 */
+    background-color: #f0f5ff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    min-height: 300px; /* 최소 높이 지정 */
 }
 
-.navigation li {
-    margin: 0 15px;
+.main_popzone_roll {
+    width: 100%;
+    height: auto; /* 이미지 비율 유지 */
+    margin-bottom: 20px;
+    overflow: hidden;
 }
 
-.navigation a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
+.main_popzone_roll img {
+    width: 100%; /* 부모 요소 크기에 맞게 이미지 확대 */
+    height: auto;
+    display: block;
 }
 
 /* 검색 섹션 */
-.search-section {
-    text-align: center;
-    padding: 40px 20px;
-    background-color: #f1f1f1;
+.search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 15px;
 }
 
-.search-section h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-
-.search-section input {
+.search-bar input {
+    flex: 1;
     padding: 10px;
-    width: 60%;
-    border: 1px solid #ccc;
+    border: none;
     border-radius: 4px;
+    font-size: 16px;
 }
 
-.search-section button {
+.search-bar button {
     padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
@@ -64,61 +71,194 @@ body {
     cursor: pointer;
 }
 
+/* 오른쪽 섹션 */
+.main-section-right {
+    flex: 1; /* 오른쪽 섹션을 좁게 */
+    background-color: #f5f5f5;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    min-height: 300px; /* 최소 높이 지정 */
+}
+
+.main-section-right p {
+    margin: 0;
+    color: #333;
+    font-weight: bold;
+}
+
+.main-section-middle {
+    display: flex; /* Flexbox 활성화 */
+    justify-content: space-between; /* 좌우 섹션 간 간격 균등 */
+    align-items: flex-start; /* 위쪽 정렬 */
+    gap: 20px; /* 두 섹션 간 간격 추가 */
+}
+
+.category-section {
+    flex: 2; /* 왼쪽 섹션을 더 넓게 */
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.login-section {
+    flex: 1; /* 왼쪽 섹션을 더 넓게 */
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* 데이터 숫자 섹션 (오른쪽 내부) */
+.data-info-box {
+    background-color: #f0f5ff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.data-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.data-text {
+    color: #333;
+}
+
+.data-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 10px 0;
+}
+
+.highlight-box {
+    margin-top: 20px;
+    background-color: #fff7d6;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.highlight {
+    color: #6c63ff;
+}
+
 /* 카테고리 섹션 */
 .category-section {
     display: flex;
     justify-content: space-around;
-    padding: 20px 10px;
+    align-items: center; /* 위쪽 정렬 */
+    margin-top: 30px;
     background-color: #fff;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    min-height: 300px; /* 최소 높이 지정 */
 }
 
-.category {
-    text-align: center;
+.category-section a {
+    text-align: center; /* 텍스트와 이미지 중앙 정렬 */
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    flex-direction: column; /* 세로 방향으로 정렬 */
+    align-items: center; /* 세로 정렬 시 중앙에 배치 */
+    gap: 10px; /* 이미지와 텍스트 간격 */
 }
 
-.category img {
-    height: 50px;
+.category-section img {
+    width: 60px;
+    height: 60px;
     margin-bottom: 10px;
 }
 
-.category p {
+/* 로그인 안내 섹션 */
+.login-section {
+    background-color: #e8f0ff; /* 배경색 */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+    margin: 0 auto; /* 가운데 정렬 */
+    border: 1px solid #ddd; /* 테두리 */
+}
+
+.login-section p {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.login-title {
+    margin: 0 0 15px 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: #666;
+    line-height: 1.5; /* 줄 간격 조정 */
+}
+
+.btn-login {
+    display: inline-block;
+    margin: 10px 0;
+    padding: 10px 20px;
+    background-color: #0056ff; /* 파란 버튼 색상 */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.login:hover {
+    background-color: #0056d6; /* Hover 색상 */
+}
+
+.login-links {
+    margin-top: 10px;
     font-size: 14px;
     color: #555;
 }
 
-/* 이벤트 섹션 */
-.event-section {
-    text-align: center;
-    padding: 30px 20px;
-    background-color: #f8f9fa;
-}
-
-.event-section h2 {
-    font-size: 20px;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.event-section p {
-    color: #666;
-    margin-bottom: 20px;
-}
-
-.event-section a {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: #fff;
+.login-link {
+    color: #555;
     text-decoration: none;
-    border-radius: 4px;
+    margin: 0 5px;
 }
 
-/* 푸터 */
-.footer {
-    text-align: center;
-    padding: 10px;
-    background-color: #343a40;
-    color: #fff;
+.login-link:hover {
+    text-decoration: underline;
 }
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .main-section {
+        flex-direction: column; /* 세로 배치 */
+    }
+
+    .main-section-left,
+    .main-section-right {
+        width: 100%; /* 전체 너비 사용 */
+    }
+}
+

@@ -3,62 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Market Platform - Homepage</title>
+    <title>Data Market Platform</title>
     <link rel="stylesheet" href="{{ url_for('homepage.static', filename='css/homepage.css') }}">
 </head>
 <body>
+    {% extends 'base.html' %}
+    {% block content %}
     <!-- 헤더 -->
-    <header class="header">
-        <div class="logo">
-            <img src="{{ url_for('homepage.static', filename='images/homepage-banner.jpg') }}" alt="홈페이지 배너">
+    <!-- <header class="header">
+        <div class="top-bar">
+            <div class="nav-center">
+                <a href="#">데이터 찾기</a>
+                <a href="#">삽니다</a>
+                <a href="#">팝니다</a>
+                <a href="#">무료 데이터</a>
+            </div>
+            <div class="nav-right">
+                <a href="#">로그인</a>
+                <a href="#">회원가입</a>
+                <a href="#">자료등록</a>
+                <a href="#">고객센터</a>
+            </div>
         </div>
-        <nav class="navigation">
-            <ul>
-                <li><a href="#">데이터 찾기</a></li>
-                <li><a href="#">삽니다</a></li>
-                <li><a href="#">팝니다</a></li>
-                <li><a href="#">무료 데이터</a></li>
-            </ul>
-        </nav>
-    </header>
+    </header> -->
 
-    <!-- 검색 섹션 -->
-    <section class="search-section">
-        <h1>데이터를 쉽게 검색해주는 DS_AI</h1>
-        <input type="text" placeholder="원하시는 데이터를 검색하세요">
-        <button>검색</button>
+    <!-- 메인 섹션 -->
+    <section class="main-section">
+        <div class="main-section-top">
+            <div class="main-section-left">
+                <!-- 왼쪽 섹션 콘텐츠 -->
+                <div class="main_popzone_roll owl-carousel owl-loaded">
+                    <!-- 슬라이더 콘텐츠 -->
+                    <div class="owl-stage-outer">
+                        <div class="owl-stage">
+                            <div class="owl-item">
+                                <div class="item">
+                                    <a href="#">
+                                        <div class="visual-info">
+                                            <p class="img"><img src="/path/to/image.jpg" alt="배너 이미지"></p>
+                                            <p class="info">배너 설명</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- 추가 슬라이더 아이템 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 검색 바 -->
+                <div class="search-bar">
+                    <input type="text" placeholder="원하시는 데이터를 검색하세요.">
+                    <button>검색</button>
+                </div>
+            </div>
+    
+            <div class="data-info-box">
+                <div class="data-item">
+                    <span class="data-text">오늘 추가된 데이터</span>
+                    <span class="data-value">1,000,000</span>
+                </div>
+                <hr>
+                <div class="data-item">
+                    <span class="data-text">공공데이터</span>
+                    <span class="data-value">16,122</span>
+                </div>
+                <hr>
+                <div class="data-item">
+                    <span class="data-text">AI학습데이터</span>
+                    <span class="data-value">17</span>
+                </div>
+                <div class="highlight-box">
+                    데이터를 쉽게 검색해주는 <span class="highlight">DS_AI</span>
+                </div>
+            </div>
+        </div>
+    
+        <div class="main-section-middle">
+            <!-- 카테고리 섹션 -->
+            <div class="category-section">
+                <a href="#">
+                    <img src="{{ url_for('static', filename='homepage/images/city.png') }}" alt="도시/지역">
+                    <span>도시/지역</span>
+                </a>
+                <a href="#">
+                    <img src="{{ url_for('static', filename='homepage/images/industry.png') }}" alt="산업/고용">
+                    <span>산업/고용</span>
+                </a>
+                <a href="#">
+                    <img src="{{ url_for('static', filename='homepage/images/finance.png') }}" alt="경제/금융">
+                    <span>경제/금융</span>
+                </a>
+                <a href="#">
+                    <img src="{{ url_for('static', filename='homepage/images/security.png') }}" alt="행정/안보">
+                    <span>행정/안보</span>
+                </a>
+                <a href="#">
+                    <img src="{{ url_for('static', filename='homepage/images/education.png') }}" alt="교육">
+                    <span>교육</span>
+                </a>
+            </div>
+
+            <!-- 로그인 안내 -->
+            <div class="login-section">
+                <p class="login-title">로그인 후<br>이용해 주세요</p>
+                <a href="#" class="btn-login">로그인</a>
+                <div class="login-links">
+                    <a href="#" class="login-link">아이디 찾기</a>
+                    <span>|</span>
+                    <a href="#" class="login-link">비밀번호 찾기</a>
+                    <span>|</span>
+                    <a href="#" class="login-link">회원가입</a>
+                </div>
+            </div>
+        </div>
     </section>
-
-    <!-- 카테고리 -->
-    <section class="category-section">
-        <div class="category">
-            <img src="../static/images/category-icon1.png" alt="카테고리 아이콘">
-            <p>도시/지역</p>
-        </div>
-        <div class="category">
-            <img src="../static/images/category-icon2.png" alt="카테고리 아이콘">
-            <p>산업/금융</p>
-        </div>
-        <div class="category">
-            <img src="../static/images/category-icon3.png" alt="카테고리 아이콘">
-            <p>경제/금융</p>
-        </div>
-        <div class="category">
-            <img src="../static/images/category-icon4.png" alt="카테고리 아이콘">
-            <p>교육</p>
-        </div>
-    </section>
-
-    <!-- 이벤트 섹션 -->
-    <section class="event-section">
-        <h2>2024 당근 부동산 테크 채용</h2>
-        <p>11.11 - 11.24</p>
-        <a href="#">지원하러 가기</a>
-    </section>
-
-    <!-- 푸터 -->
-    <footer class="footer">
-        <p>© 2024 Data Market Platform. All Rights Reserved.</p>
-    </footer>
+    {% endblock %}
 </body>
 </html>
