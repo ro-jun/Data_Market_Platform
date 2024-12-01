@@ -7,19 +7,24 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-    <header class="header">
-        <div class="logo">로고</div>
-        <nav class="nav">
-            <a href="#">데이터 찾기</a>
-            <a href="#">삽니다</a>
-            <a href="#">팝니다</a>
-            <a href="#">무료 데이터</a>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div class="logo">데테크</div>
+                <ul class="nav-links">
+                    <li><a href="#">데이터 카테고리</a></li>
+                    <li><a href="#">데이터 구매</a></li>
+                    <li><a href="#">데이터 판매</a></li>
+                    <li><a href="#">무료 데이터</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <button>자료등록</button>
+                    <button>고객센터</button>
+                    <button>로그인</button>
+                </div>
+            </div>
         </nav>
-        <div class="user-info">
-            <span>홍길동님</span>
-            <a href="#">자료등록</a>
-            <a href="#">고객센터</a>
-        </div>
     </header>
 
     <main class="content">

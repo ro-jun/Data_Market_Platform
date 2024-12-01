@@ -5,37 +5,55 @@ body {
     padding: 0;
     background-color: #f9f9f9;
 }
+/* 헤더 세션 */
+header {
+    background-color: #f0d1a6;
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+}
 
-/* 헤더 */
-.header {
+/* 네비게이션 세션 */
+.nav-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
-    background-color: #eadaac;
-    border-bottom: 1px solid #ccc;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
-.nav a {
-    margin: 0 10px;
-    text-decoration: none;
-    color: black;
+.logo {
+    font-size: 1.5em;
     font-weight: bold;
 }
 
-.nav a.active {
-    color: #d95d39;
+.nav-links {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
 }
 
-.user-info {
-    font-size: 14px;
-    color: #333;
+.nav-links li {
+    display: inline;
 }
 
-.user-info a {
-    margin-left: 10px;
+.nav-links a {
     text-decoration: none;
-    color: #d95d39;
+    color: #333;
+    font-weight: bold;
+}
+
+.nav-buttons button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.nav-buttons button:hover {
+    background-color: #555;
 }
 
 /* 메인 콘텐츠 */
