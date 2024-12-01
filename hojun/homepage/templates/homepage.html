@@ -3,65 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Market Platform - Homepage</title>
+    <title>Data Market Platform</title>
     <link rel="stylesheet" href="{{ url_for('homepage.static', filename='css/homepage.css') }}">
+    <!-- Owl Carousel CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+
+    <!-- jQuery (필수) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Owl Carousel JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 </head>
 <body>
     {% extends 'base.html' %}
     {% block content %}
-    <!-- 헤더 -->
-    <header class="header">
-        <div class="logo">
-            <img src="{{ url_for('homepage.static', filename='images/homepage-banner.jpg') }}" alt="홈페이지 배너">
+    <!-- 메인 섹션 -->
+    <section class="main-section">
+        <div class="main-section-top">
+            <div class="main-section-left">
+                <!-- 슬라이더 콘텐츠 -->
+                <div class="owl-carousel">
+                    <div class="item">
+                        <a href="https://data.seoul.go.kr/etc/offerReqst.do" title="필요한 데이터가 없을 때! 공공데이터 제공신청">
+                            <img src="hojun\homepage\static\images\city.png" alt="필요한 데이터가 없을 때! 공공데이터 제공신청">
+                            <p>필요한 데이터가 없을 때! 공공데이터 제공신청</p>
+                        </a>
+                    </div>
+                    <div class="item">
+                        <a href="https://bigdata.seoul.go.kr/" title="빅데이터 캠퍼스에 데이터 보러 가자!">
+                            <img src="hojun\homepage\static\images\education.png" alt="빅데이터 캠퍼스에 데이터 보러 가자!">
+                            <p>빅데이터 캠퍼스에 데이터 보러 가자!</p>
+                        </a>
+                    </div>
+                    <div class="item">
+                        <a href="https://data.seoul.go.kr/dataService/statView.do?wjId=fec8730ec6c5f503f9ddb5bfb591701c&amp;pageIndex=1" title="2024년 10월 기준 서울시 등록인구 현황">
+                            <img src="hojun\homepage\static\images\security.png" alt="2024년 10월 기준 서울시 등록인구 현황">
+                            <p>2024년 10월 기준 서울시 등록인구 현황</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="main-section-right">
+                <div class="data-item">
+                    <span class="data-text">오늘 추가된 데이터</span>
+                    <span class="data-value">1,000,000</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-text">공공데이터</span>
+                    <span class="data-value">16,122</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-text">AI학습데이터</span>
+                    <span class="data-value">17</span>
+                </div>
+            </div>
         </div>
-        <nav class="navigation">
-            <ul>
-                <li><a href="#">데이터 찾기</a></li>
-                <li><a href="#">삽니다</a></li>
-                <li><a href="#">팝니다</a></li>
-                <li><a href="#">무료 데이터</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <!-- 검색 섹션 -->
-    <section class="search-section">
-        <h1>데이터를 쉽게 검색해주는 DS_AI</h1>
-        <input type="text" placeholder="원하시는 데이터를 검색하세요">
-        <button>검색</button>
+        <div class="main-section-middle"> 
+            <!-- 검색 바 -->
+            <div class="search-bar">
+                <input type="text" placeholder="원하시는 데이터를 검색하세요.">
+                <button>검색</button>
+            </div>
+            <div class="highlight-box">
+                <span>데이터를 쉽게 검색해주는&nbsp</span>
+                <span class="highlight">DS_AI</span>
+            </div>
+        </div>
+        
+        <div class="main-section-low">
+            <div class="carousel">
+                <button class="prev-btn">◀</button>
+                <div class="carousel-track-container">
+                    <ul class="carousel-track">
+                        <li class="carousel-item">
+                            <img src="{{ url_for('static', filename='homepage/images/city.png') }}" alt="도시/지역">
+                            <p>도시/지역</p>
+                        </li>
+                        <li class="carousel-item">
+                            <img src="{{ url_for('static', filename='homepage/images/industry.png') }}" alt="산업/고용">
+                            <p>산업/고용</p>
+                        </li>
+                        <li class="carousel-item">
+                            <img src="{{ url_for('static', filename='homepage/images/finance.png') }}" alt="경제/금융">
+                            <p>경제/금융</p>
+                        </li>
+                        <li class="carousel-item">
+                            <img src="{{ url_for('static', filename='homepage/images/security.png') }}" alt="행정/안보">
+                            <p>행정/안보</p>
+                        </li>
+                        <li class="carousel-item">
+                            <img src="{{ url_for('static', filename='homepage/images/education.png') }}" alt="교육">
+                            <p>교육</p>
+                        </li>
+                        <li class="carousel-item">
+                            <img src="{{ url_for('static', filename='homepage/images/education.png') }}" alt="교육">
+                            <p>교육</p>
+                        </li>
+                        <li class="carousel-item">
+                            <img src="{{ url_for('static', filename='homepage/images/education.png') }}" alt="교육">
+                            <p>교육</p>
+                        </li>
+                    </ul>
+                </div>
+                <button class="next-btn">▶</button>
+            </div>
+
+            <!-- 로그인 안내 -->
+            <div class="login-section">
+                <p class="login-title">로그인 후<br>이용해 주세요</p>
+                <a href="#" class="btn-login">로그인</a>
+                <div class="login-links">
+                    <a href="#" class="login-link">아이디 찾기</a>
+                    <span>|</span>
+                    <a href="#" class="login-link">비밀번호 찾기</a>
+                    <span>|</span>
+                    <a href="#" class="login-link">회원가입</a>
+                </div>
+            </div>
+        </div>
     </section>
-
-    <!-- 카테고리 -->
-    <section class="category-section">
-        <div class="category">
-            <img src="../static/images/category-icon1.png" alt="카테고리 아이콘">
-            <p>도시/지역</p>
-        </div>
-        <div class="category">
-            <img src="../static/images/category-icon2.png" alt="카테고리 아이콘">
-            <p>산업/금융</p>
-        </div>
-        <div class="category">
-            <img src="../static/images/category-icon3.png" alt="카테고리 아이콘">
-            <p>경제/금융</p>
-        </div>
-        <div class="category">
-            <img src="../static/images/category-icon4.png" alt="카테고리 아이콘">
-            <p>교육</p>
-        </div>
-    </section>
-
-    <!-- 이벤트 섹션 -->
-    <section class="event-section">
-        <h2>2024 당근 부동산 테크 채용</h2>
-        <p>11.11 - 11.24</p>
-        <a href="#">지원하러 가기</a>
-    </section>
-
-    <!-- 푸터 -->
-    <footer class="footer">
-        <p>© 2024 Data Market Platform. All Rights Reserved.</p>
-    </footer>
+    <script src="{{ url_for('static', filename='homepage/js/homepage.js') }}"></script>
     {% endblock %}
 </body>
 </html>
