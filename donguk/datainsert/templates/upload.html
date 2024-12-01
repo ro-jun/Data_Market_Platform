@@ -6,8 +6,9 @@
     <title>데이터 등록</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
+
 <body>
-    <header class="header">
+     <header class="header">
         <div class="logo">로고</div>
         <nav class="nav">
             <a href="#">데이터 찾기</a>
@@ -20,23 +21,22 @@
             <a href="#">자료등록</a>
             <a href="#">고객센터</a>
         </div>
-    </header>
-    <main class="content">
-        <div class="upload-section">
+    </header>    <main class="content">
+        <div class="upload-container">
             <h1>데이터 등록</h1>
-            <form action="/upload" method="POST" enctype="multipart/form-data" id="data-form">
-                <!-- 데이터 제목 -->
-                <div>
+            <form id="data-form">
+                <div class="form-group">
                     <label for="title">데이터 제목</label>
                     <input type="text" id="title" name="title" required>
                 </div>
-                <!-- 데이터 가격 -->
-                <div>
+                <div class="form-group">
                     <label for="price">데이터 가격</label>
-                    <input type="number" id="price" name="price" required> 원
+                    <div class="price-input-container">
+                        <input type="number" id="price" name="price" required>
+                        <span class="unit">원</span>
+                    </div>
                 </div>
-                <!-- 분류 -->
-                <div>
+                <div class="form-group">
                     <label for="category">분류</label>
                     <select id="category" name="category" required>
                         <option value="경제/금융">경제/금융</option>
@@ -46,26 +46,24 @@
                         <option value="환경/기상">환경/기상</option>
                     </select>
                 </div>
-                <!-- 설명 -->
-                <div>
+                <div class="form-group">
                     <label for="description">설명</label>
                     <textarea id="description" name="description" rows="4" required></textarea>
                 </div>
-                <!-- 추가 파일 -->
-                <div class="file-upload">
-                    <div class="dropzone" id="dropzone">
+                <div class="file-upload-section">
+                    <div id="dropzone" class="dropzone">
                         <p>+ 추가 파일</p>
+                        <input type="file" name="files[]" id="files" class="file-input-hidden" multiple>
                     </div>
-                    <input type="file" name="files[]" id="files" class="file-input-hidden" multiple>
                     <ul id="file-list"></ul>
                 </div>
-                <button type="submit" class="upload-button">등록</button>
+                <button type="submit" class="submit-button">등록</button>
             </form>
         </div>
     </main>
-        <div id="popup" class="popup hidden">
+    <div id="popup" class="popup hidden">
         <div class="popup-content">
-            <p>등록이 완료되었습니다!</p>
+            <p id="popup-message">등록이 완료되었습니다!</p>
             <button id="close-popup">확인</button>
         </div>
     </div>

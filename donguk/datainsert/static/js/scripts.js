@@ -1,92 +1,78 @@
-// 드래그 앤 드롭: 추가 파일 영역에서만 작동
-const dropzone = document.getElementById('dropzone');
-const fileInput = document.getElementById('files');
-const fileList = document.getElementById('file-list');
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('data-form');
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('files');
+    const fileList = document.getElementById('file-list');
+    const popup = document.getElementById('popup');
+    const popupMessage = document.getElementById('popup-message');
+    const closePopup = document.getElementById('close-popup');
 
-// 드래그 앤 드롭 이벤트 핸들러
-dropzone.addEventListener('dragover', (event) => {
-    event.preventDefault();
-    dropzone.classList.add('dragging');
-});
+    // 드롭존 클릭 이벤트로 파일 선택 열기
+    dropzone.addEventListener('click', () => {
+        fileInput.click(); // 파일 입력 창 열기
+    });
 
-dropzone.addEventListener('dragleave', () => {
-    dropzone.classList.remove('dragging');
-});
+    // 파일 선택 이벤트 처리
+    fileInput.addEventListener('change', () => {
+        fileList.innerHTML = ''; // 기존 파일 리스트 초기화
+        Array.from(fileInput.files).forEach((file) => {
+            const li = document.createElement('li');
+            li.textContent = file.name;
 
-dropzone.addEventListener('drop', (event) => {
-    event.preventDefault();
-    dropzone.classList.remove('dragging');
+            // 삭제 버튼 추가
+            const removeButton = document.createElement('span');
+            removeButton.textContent = ' ❌';
+            removeButton.classList.add('remove-file');
+            removeButton.addEventListener('click', () => {
+                li.remove(); // 리스트에서 파일 삭제
+            });
 
-    const files = event.dataTransfer.files;
-    updateFileList(files);
-});
+            li.appendChild(removeButton);
+            fileList.appendChild(li);
+        });
+    });
 
-// 클릭 시 파일 업로드 창 열기 (추가 파일 영역에서만 작동)
-dropzone.addEventListener('click', () => {
-    fileInput.click();
-});
+    // 폼 제출 이벤트 처리
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-// 파일 선택 이벤트
-fileInput.addEventListener('change', (event) => {
-    const files = event.target.files;
-    updateFileList(files);
-});
+        // 폼 데이터 수집
+        const formData = new FormData(form);
+        const files = Array.from(fileInput.files).map(file => file.name);
 
-// 파일 리스트 업데이트
-function updateFileList(files) {
-    fileList.innerHTML = ''; // 기존 파일 리스트 초기화
-    Array.from(files).forEach((file, index) => {
-        const listItem = document.createElement('li');
-        listItem.textContent = file.name;
-
-        // 삭제 버튼 추가
-        const removeButton = document.createElement('button');
-        removeButton.textContent = '❌';
-        removeButton.style.marginLeft = '10px';
-        removeButton.onclick = () => {
-            removeFile(index);
+        const data = {
+            title: formData.get('title'),
+            price: formData.get('price'),
+            category: formData.get('category'),
+            description: formData.get('description'),
+            files: files
         };
 
-        listItem.appendChild(removeButton);
-        fileList.appendChild(listItem);
-    });
-}
+        try {
+            // 서버로 데이터 전송
+            const response = await fetch('/submit-data', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
 
-// 특정 파일 삭제
-function removeFile(index) {
-    const dt = new DataTransfer();
-    const files = fileInput.files;
+            const result = await response.json();
 
-    Array.from(files).forEach((file, i) => {
-        if (i !== index) {
-            dt.items.add(file);
+            if (response.ok) {
+                popupMessage.textContent = result.message || "등록이 완료되었습니다!";
+                popup.classList.remove('hidden'); // 팝업 표시
+            } else {
+                alert(result.message || "서버에서 에러가 발생했습니다.");
+            }
+        } catch (error) {
+            alert('오류가 발생했습니다. 다시 시도해주세요.');
         }
     });
 
-    fileInput.files = dt.files; // 파일 리스트 업데이트
-    fileInput.dispatchEvent(new Event('change')); // 파일 리스트 변경 이벤트 트리거
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    const popup = document.getElementById('popup');
-    const closePopupButton = document.getElementById('close-popup');
-    const form = document.getElementById('data-form');
-
-    // 폼 제출 이벤트 처리
-    form.addEventListener('submit', (event) => {
-        event.preventDefault(); // 실제 제출은 막음 (테스트용)
-
-        // 서버에 데이터 전송 로직 (fetch나 AJAX를 통해 서버로 데이터 전송)
-        // 이 부분에서 실제 데이터를 서버로 보냄
-        const formData = new FormData(form);
-
-        // 서버 응답이 성공적이라고 가정하고 팝업을 띄움
-        popup.classList.remove('hidden');
-    });
-
-    // 팝업 닫기 버튼 클릭 이벤트
-    closePopupButton.addEventListener('click', () => {
-        popup.classList.add('hidden'); // 팝업 숨김
+    // 팝업 닫기
+    closePopup.addEventListener('click', () => {
+        popup.classList.add('hidden'); // 팝업 숨기기
         form.reset(); // 폼 초기화
+        fileList.innerHTML = ''; // 파일 리스트 초기화
     });
 });
