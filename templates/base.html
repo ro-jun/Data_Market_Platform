@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- base CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div class="logo">데테크</div>
+                <ul class="nav-links">
+                    <li><a href="#">데이터 카테고리</a></li>
+                    <li><a href="#">데이터 구매</a></li>
+                    <li><a href="#">데이터 판매</a></li>
+                    <li><a href="#">무료 데이터</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <button>자료등록</button>
+                    <button>고객센터</button>
+                    <button>로그인</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- 기본 템플릿 안에 삽입될 내용 Start -->
+    {% block content %}
+    {% endblock %}
+    <!-- 기본 템플릿 안에 삽입될 내용 End -->
+</body>
+</html>

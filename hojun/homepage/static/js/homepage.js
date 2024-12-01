@@ -3,6 +3,55 @@ const sendButton = document.querySelector(".send-btn");
 const userInput = document.querySelector("#user-input");
 const messagesSection = document.querySelector("#messages");
 
+document.addEventListener("DOMContentLoaded", () => {
+    const track = document.querySelector(".carousel-track");
+    const prevBtn = document.querySelector(".prev-btn");
+    const nextBtn = document.querySelector(".next-btn");
+    const items = Array.from(track.children);
+
+    let currentSlide = 0;
+
+    // Update the position of the carousel track
+    const updateCarousel = () => {
+        const slideWidth = items[0].getBoundingClientRect().width;
+        track.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+    };
+
+    // Move to the next slide
+    nextBtn.addEventListener("click", () => {
+        if (currentSlide < items.length - 1) {
+            currentSlide++;
+            updateCarousel();
+        }
+    });
+
+    // Move to the previous slide
+    prevBtn.addEventListener("click", () => {
+        if (currentSlide > 0) {
+            currentSlide--;
+            updateCarousel();
+        }
+    });
+
+    // Initialize carousel
+    updateCarousel();
+});
+
+$(document).ready(function () {
+    $(".owl-carousel").owlCarousel({
+        loop: true,
+        margin: 10,
+        nav: true,
+        autoplay: true,
+        autoplayTimeout: 3000,
+        responsive: {
+            0: { items: 1 },
+            600: { items: 2 },
+            1000: { items: 3 },
+        },
+    });
+})
+
 // 메시지를 추가하는 함수
 function addMessage(message, sender = "user") {
     const messageDiv = document.createElement("div");
@@ -50,4 +99,5 @@ userInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
         sendButton.click(); // Enter 키로 전송 버튼 클릭 효과
     }
+    
 });
