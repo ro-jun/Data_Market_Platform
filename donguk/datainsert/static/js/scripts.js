@@ -36,9 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // 폼 데이터 수집
         const formData = new FormData(form);
-        const files = Array.from(fileInput.files).map(file => file.name);
+        const files = Array.from(document.getElementById('files').files).map(file => file.name);
 
         const data = {
             title: formData.get('title'),
@@ -49,30 +48,31 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            // 서버로 데이터 전송
             const response = await fetch('/submit-data', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
 
+            // 응답 처리
             const result = await response.json();
-
-            if (response.ok) {
+            console.log('응답 결과:', result); // 디버깅용 로그
+            if (response.ok && result.success) {
                 popupMessage.textContent = result.message || "등록이 완료되었습니다!";
-                popup.classList.remove('hidden'); // 팝업 표시
+                popup.style.display = 'block'; // 팝업 표시
             } else {
-                alert(result.message || "서버에서 에러가 발생했습니다.");
+                alert(result.message || "서버에서 오류가 발생했습니다.");
             }
         } catch (error) {
+            console.error('에러 발생:', error);
             alert('오류가 발생했습니다. 다시 시도해주세요.');
         }
     });
 
     // 팝업 닫기
     closePopup.addEventListener('click', () => {
-        popup.classList.add('hidden'); // 팝업 숨기기
+        popup.style.display = 'none'; // 팝업 숨기기
         form.reset(); // 폼 초기화
-        fileList.innerHTML = ''; // 파일 리스트 초기화
+        document.getElementById('file-list').innerHTML = ''; // 파일 리스트 초기화
     });
 });

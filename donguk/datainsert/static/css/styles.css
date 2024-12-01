@@ -152,8 +152,7 @@ textarea {
 #file-list li .remove-file:hover {
     text-decoration: underline;
 }
-
-/* 팝업 스타일 */
+/* 팝업 초기 상태 */
 .popup {
     position: fixed;
     top: 50%;
@@ -165,13 +164,10 @@ textarea {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     padding: 20px;
     z-index: 1000;
-    display: none;
+    display: none; /* 기본적으로 숨김 */
 }
 
-.popup.hidden {
-    display: none;
-}
-
+/* 팝업 내용 스타일 */
 .popup-content {
     text-align: center;
 }

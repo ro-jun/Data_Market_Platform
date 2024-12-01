@@ -135,3 +135,35 @@ body {
     bottom: 0;
     width: 100%;
 }
+
+/* 테이블 스타일 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.edit-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.edit-button:hover {
+    background-color: #45a049;
+}
+

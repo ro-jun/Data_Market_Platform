@@ -16,7 +16,6 @@ def index():
 # 데이터 저장 API
 @app.route('/submit-data', methods=['POST'])
 def submit_data():
-    # JSON 데이터 받아오기
     data = request.json
     title = data.get('title')
     price = data.get('price')
@@ -39,6 +38,7 @@ def submit_data():
     data_collection.insert_one(new_data)
 
     return jsonify({"success": True, "message": "등록이 완료되었습니다!"})
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -12,7 +12,7 @@
         <nav class="nav">
             <a href="#">데이터 찾기</a>
             <a href="#">삽니다</a>
-            <a href="#" class="active">팝니다</a>
+            <a href="#">팝니다</a>
             <a href="#">무료 데이터</a>
         </nav>
         <div class="user-info">
@@ -56,17 +56,114 @@
             </div>
 
             <div class="tab-content hidden" id="purchase-content">
-                <p>구매 데이터 관리 내용...</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>데이터 이름</th>
+                            <th>구매 날짜</th>
+                            <th>데이터 형식</th>
+                            <th>카테고리</th>
+                            <th>가격</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in sell_data %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ item.title }}</td>
+                            <td>{{ item.purchase_date }}</td>
+                            <td>{{ item.data_format }}</td>
+                            <td>{{ item.category }}</td>
+                            <td>{{ item.price }} 원</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
             <div class="tab-content hidden" id="saved-content">
-                <p>찜한 데이터 내용...</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>데이터 이름</th>
+                            <th>구매 날짜</th>
+                            <th>데이터 형식</th>
+                            <th>카테고리</th>
+                            <th>가격</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in sell_data %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ item.title }}</td>
+                            <td>{{ item.purchase_date }}</td>
+                            <td>{{ item.data_format }}</td>
+                            <td>{{ item.category }}</td>
+                            <td>{{ item.price }} 원</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
             <div class="tab-content hidden" id="recent-content">
-                <p>최근 본 데이터 내용...</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>데이터 이름</th>
+                            <th>구매 날짜</th>
+                            <th>데이터 형식</th>
+                            <th>카테고리</th>
+                            <th>가격</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in sell_data %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ item.title }}</td>
+                            <td>{{ item.purchase_date }}</td>
+                            <td>{{ item.data_format }}</td>
+                            <td>{{ item.category }}</td>
+                            <td>{{ item.price }} 원</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
+
+            <!-- 판매 데이터 관리 -->
             <div class="tab-content hidden" id="sales-content">
-                <p>판매 데이터 관리 내용...</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>데이터 이름</th>
+                            <th>구매 날짜</th>
+                            <th>데이터 형식</th>
+                            <th>카테고리</th>
+                            <th>가격</th>
+                            <th>작업</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in sell_data %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ item.title }}</td>
+                            <td>{{ item.purchase_date }}</td>
+                            <td>{{ item.data_format }}</td>
+                            <td>{{ item.category }}</td>
+                            <td>{{ item.price }} 원</td>
+                            <td><button class="edit-button">수정</button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
+
         </section>
     </main>
 
