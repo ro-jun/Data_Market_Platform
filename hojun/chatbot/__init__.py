@@ -2,7 +2,6 @@ from flask import Blueprint, request, jsonify, render_template
 from hojun.chatbot.llm_chain_setup import llm_chain  # Q&A 체인 가져오기
 from hojun.chatbot.similar_search import search_similar_data  # 유사도 검색 함수 가져오기
 import traceback
-import json
 
 # Blueprint 생성
 chatbot_blueprint = Blueprint(

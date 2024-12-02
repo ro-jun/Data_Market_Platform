@@ -4,32 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>데이터 관리</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('mypage.static', filename='css/mypage.css') }}">
 </head>
 <body>
 <body>
-    <header>
-        <nav>
-            <div class="nav-container">
-                <div class="logo">데테크</div>
-                <ul class="nav-links">
-                    <li><a href="#">데이터 카테고리</a></li>
-                    <li><a href="#">데이터 구매</a></li>
-                    <li><a href="#">데이터 판매</a></li>
-                    <li><a href="#">무료 데이터</a></li>
-                </ul>
-                <div class="nav-buttons">
-                    <button>자료등록</button>
-                    <button>고객센터</button>
-                    <button>로그인</button>
-                </div>
-            </div>
-        </nav>
-    </header>
+    {% extends 'base.html' %}
+    {% block content %}
 
     <main class="content">
         <aside class="profile-sidebar">
-            <img src="static/images/profile.png" alt="프로필 사진" class="profile-img">
+            <img src="{{ url_for('mypage.static', filename='images/profile.jpg') }}" alt="프로필 사진" class="profile-img">
             <h2>홍길동님</h2>
             <p>내 포인트: 100,000</p>
             <p>구매 데이터 수: 100</p>
@@ -48,7 +32,7 @@
 
             <div class="tab-content" id="profile-content">
                 <div class="profile-details">
-                    <img src="static/images/profile.jpg" alt="홍길동" class="user-profile-img">
+                    <img src="{{ url_for('mypage.static', filename='images/profile.jpg') }}" alt="홍길동" class="user-profile-img">
                     <div class="profile-info">
                         <p><strong>이메일</strong>: hongildong@syuin.ac.kr</p>
                         <p><strong>전화번호</strong>: 010-1234-5678</p>
@@ -176,6 +160,7 @@
         &copy; 2024 Data Market Platform. All Rights Reserved.
     </footer>
 
-    <script src="static/js/scripts.js"></script>
+    <script src="{{ url_for('mypage.static', filename='js/mypage.js') }}"></script>
+    {% endblock %}
 </body>
 </html>
