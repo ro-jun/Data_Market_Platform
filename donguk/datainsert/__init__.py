@@ -1,7 +1,13 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify
 from pymongo import MongoClient
 
-app = Flask(__name__)
+# Blueprint 생성
+datainsert_blueprint = Blueprint(
+    "datainsert", 
+    __name__, 
+    template_folder="templates",
+    static_folder='static'
+    )
 
 # MongoDB 연결 설정
 client = MongoClient('mongodb://localhost:27017/')
@@ -9,12 +15,12 @@ db = client.dataMarket
 data_collection = db.data
 
 # 데이터 등록 페이지
-@app.route('/')
-def index():
-    return render_template('upload.html')
+@datainsert_blueprint.route('/', methods=["GET"])
+def datainsert():
+    return render_template('datainsert.html')
 
 # 데이터 저장 API
-@app.route('/submit-data', methods=['POST'])
+@datainsert_blueprint.route('/submit-data', methods=['POST'])
 def submit_data():
     data = request.json
     title = data.get('title')
@@ -38,7 +44,3 @@ def submit_data():
     data_collection.insert_one(new_data)
 
     return jsonify({"success": True, "message": "등록이 완료되었습니다!"})
-
-
-if __name__ == '__main__':
-    app.run(debug=True)

@@ -4,28 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>데이터 등록</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('datainsert.static', filename='css/datainsert.css') }}">
 </head>
 
 <body><body>
-    <header>
-        <nav>
-            <div class="nav-container">
-                <div class="logo">데테크</div>
-                <ul class="nav-links">
-                    <li><a href="#">데이터 카테고리</a></li>
-                    <li><a href="#">데이터 구매</a></li>
-                    <li><a href="#">데이터 판매</a></li>
-                    <li><a href="#">무료 데이터</a></li>
-                </ul>
-                <div class="nav-buttons">
-                    <button>자료등록</button>
-                    <button>고객센터</button>
-                    <button>로그인</button>
-                </div>
-            </div>
-        </nav>
-    </header>
+    {% extends 'base.html' %}
+    {% block content %}
     <main class="content">
         <div class="upload-container">
             <h1>데이터 등록</h1>
@@ -74,6 +58,7 @@
             <button id="close-popup">확인</button>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script src="{{ url_for('datainsert.static', filename='js/datainsert.js') }}"></script>
+    {% endblock %}
 </body>
 </html>
