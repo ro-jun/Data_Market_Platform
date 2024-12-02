@@ -3,76 +3,83 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropzone = document.getElementById('dropzone');
     const fileInput = document.getElementById('files');
     const fileList = document.getElementById('file-list');
-    const popup = document.getElementById('popup');
+    const popup = docment.getElementById('popup');
     const popupMessage = document.getElementById('popup-message');
     const closePopup = document.getElementById('close-popup');
+    const mainCategory = document.getElementById('main-category');
+    const subCategory = document.getElementById('sub-category');
 
-    // 드롭존 클릭 이벤트로 파일 선택 열기
-    dropzone.addEventListener('click', () => {
-        fileInput.click(); // 파일 입력 창 열기
-    });
+    const categoryData = {
+        "리포트": ["경영/경제", "공학/기술", "교육학", "농수산학", "특허감/창작", "법학", "사회과학", "생활/환경", "예체능", "의/약학", "인문/어학", "자연과학", "창업"],
+        "논문": ["인문학", "사회과학", "자연과학", "공학", "농수해양학", "의약학", "예술체육학", "학위논문"],
+        "자기소개서": ["취업", "학교", "작성법", "면접준비", "기타u"],
+        "방송통신대": ["중간시험", "기말시험", "계절시험", "핵심요약노트", "출석대체 시험/과제"],
+        "서식": ["각종계약서", "건설서식", "교육서식", "법률서식", "부서별서식", "생활서식", "업무서식", "회사서식"],
+        "노하우": ["구매/판매대행", "글쓰기", "데이터분석", "마케팅", "블로그/스토어", "유튜브", "전자책/출판"]
+    };
 
-    // 파일 선택 이벤트 처리
-    fileInput.addEventListener('change', () => {
-        fileList.innerHTML = ''; // 기존 파일 리스트 초기화
-        Array.from(fileInput.files).forEach((file) => {
-            const li = document.createElement('li');
-            li.textContent = file.name;
+    // 1계층 변경 시 2계층 업데이트
+    mainCategory.addEventListener('change', () => {
+        const selectedMain = mainCategory.value;
+        const subOptions = categoryData[selectedMain] || [];
 
-            // 삭제 버튼 추가
-            const removeButton = document.createElement('span');
-            removeButton.textContent = ' ❌';
-            removeButton.classList.add('remove-file');
-            removeButton.addEventListener('click', () => {
-                li.remove(); // 리스트에서 파일 삭제
-            });
-
-            li.appendChild(removeButton);
-            fileList.appendChild(li);
+        subCategory.innerHTML = '<option value="">세부 옵션 선택</option>';
+        subOptions.forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option;
+            opt.textContent = option;
+            subCategory.appendChild(opt);
         });
     });
 
-    // 폼 제출 이벤트 처리
+    // 드롭존 클릭 시 파일 선택 창 열기
+    dropzone.addEventListener('click', () => fileInput.click());
+
+    // 파일 선택 시 리스트에 표시
+    fileInput.addEventListener('change', () => {
+        fileList.innerHTML = ''; // 기존 파일 리스트 초기화
+        Array.from(fileInput.files).forEach(file => {
+            const listItem = document.createElement('li');
+            listItem.textContent = file.name;
+
+            const removeButton = document.createElement('button');
+            removeButton.textContent = '❌';
+            removeButton.classList.add('remove-file');
+            removeButton.addEventListener('click', () => listItem.remove());
+
+            listItem.appendChild(removeButton);
+            fileList.appendChild(listItem);
+        });
+    });
+
+    // 폼 제출 이벤트
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const formData = new FormData(form);
-        const files = Array.from(document.getElementById('files').files).map(file => file.name);
-
-        const data = {
-            title: formData.get('title'),
-            price: formData.get('price'),
-            category: formData.get('category'),
-            description: formData.get('description'),
-            files: files
-        };
+        const formData = new FormData(form); // 파일 포함 모든 데이터를 전송
 
         try {
             const response = await fetch('/submit-data', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+                body: formData
             });
 
-            // 응답 처리
             const result = await response.json();
-            console.log('응답 결과:', result); // 디버깅용 로그
             if (response.ok && result.success) {
                 popupMessage.textContent = result.message || "등록이 완료되었습니다!";
-                popup.style.display = 'block'; // 팝업 표시
+                popup.classList.add('visible'); // 팝업 표시
             } else {
                 alert(result.message || "서버에서 오류가 발생했습니다.");
             }
         } catch (error) {
-            console.error('에러 발생:', error);
             alert('오류가 발생했습니다. 다시 시도해주세요.');
         }
     });
 
     // 팝업 닫기
     closePopup.addEventListener('click', () => {
-        popup.style.display = 'none'; // 팝업 숨기기
-        form.reset(); // 폼 초기화
-        document.getElementById('file-list').innerHTML = ''; // 파일 리스트 초기화
+        popup.classList.remove('visible');
+        form.reset();
+        fileList.innerHTML = '';
     });
 });

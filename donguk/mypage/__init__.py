@@ -3,8 +3,8 @@ from pymongo import MongoClient
 
 # Blueprint 생성
 mypage_blueprint = Blueprint(
-    "mypage", 
-    __name__, 
+    "mypage",
+    __name__,
     template_folder="templates",
     static_folder='static'
     )
@@ -42,4 +42,4 @@ data_collection = db.data
 #     # MongoDB에서 판매 데이터 가져오기
 #     sell_data = list(data_collection.find({}, {"_id": 0}))  # "_id" 제외
 
-#     return render_template('profile.html', user=user_data, sell_data=sell_data)
+#     return render_template('mypage.html', user=user_data, sell_data=sell_data)
