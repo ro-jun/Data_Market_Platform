@@ -6,6 +6,8 @@ datainsert_blueprint = Blueprint(
     "datainsert",
     __name__,
     template_folder="templates",
+    static_folder="static",
+    static_url_path='/static/donguk'
 )
 
 # MongoDB 연결 설정

@@ -11,12 +11,11 @@
     <header>
         <nav>
             <div class="nav-container">
-                <div class="logo">데테크</div>
+                <div class="logo"><a href="{{ url_for('homepage.homepage') }}">데테크</a></div>
                 <ul class="nav-links">
-                    <li><a href="#">데이터 카테고리</a></li>
-                    <li><a href="#">데이터 구매</a></li>
-                    <li><a href="#">데이터 판매</a></li>
-                    <li><a href="#">무료 데이터</a></li>
+                    <li><a href="{{ url_for('categorySearch.categorySearch') }}">데이터 구매</a></li>
+                    <li><a href="{{ url_for('datainsert.datainsert') }}">데이터 판매</a></li>
+                    <li><a href="{{ url_for('chatbot.chatbot') }}">챗봇</a></li>
                 </ul>
                 <div class="nav-buttons">
                     <button>자료등록</button>
