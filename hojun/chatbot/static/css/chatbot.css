@@ -20,7 +20,10 @@ body, html {
 
 /* 왼쪽 채팅 내역 */
 .chat-history {
-    width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* 상단과 하단 콘텐츠를 양쪽으로 정렬 */
+    height: 100%; /* 부모 높이에 맞게 설정 */
     padding: 20px;
     border-right: 1px solid #ddd;
     background-color: #f4f4f4;
@@ -32,12 +35,13 @@ body, html {
 }
 
 .chat-history ul {
+    flex-grow: 1; /* 채팅 기록 목록이 남는 공간을 차지하도록 설정 */
+    overflow-y: auto; /* 스크롤 추가 */
     list-style: none;
     padding: 0;
     margin: 0;
-    max-height: 400px;
-    overflow-y: auto; /* 스크롤 추가 */
 }
+
 
 .chat-history li {
     padding: 10px;
@@ -63,14 +67,17 @@ body, html {
 
 .user-info {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    justify-content: space-between;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background-color: #f4f4f4;
 }
 
 .user-profile {
     display: flex;
     align-items: center;
+    gap: 10px;
 }
 
 .user-profile img {
@@ -137,6 +144,8 @@ body, html {
     display: flex;
     align-items: center;
     padding: 10px;
+    margin-left: 40px;
+    margin-right: 40px;
     border-top: 1px solid #ddd;
     background: #fff;
 }
@@ -144,7 +153,7 @@ textarea {
     flex-grow: 1;
     height: 80px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 20px;
     padding: 10px;
     font-size: 16px;
     resize: none;
@@ -204,10 +213,10 @@ textarea {
 
 /* 유저 아이콘 크기 조정 */
 .user-icon {
-    font-size: 30px;
+    font-size: 24px;
     color: #007bff;
-    margin-right: 10px;
 }
+
 
 /* 설정 아이콘 크기 */
 .settings-icon {
