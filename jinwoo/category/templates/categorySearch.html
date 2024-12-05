@@ -5,86 +5,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>데테크 - 데이터 찾기</title>
+    <!-- CSS 파일의 경로를 정확히 설정 -->
     <link rel="stylesheet" href="{{ url_for('categorySearch.static', filename='css/categorySearch.css') }}">
+    <script src="{{ url_for('categorySearch.static', filename='js/categorySearch.js') }}" defer></script>
 </head>
 
 <body>
-    <header>
-        <nav>
-            <div class="nav-container">
-                <div class="logo">데테크</div>
-                <ul class="nav-links">
-                    <li><a href="#">데이터 찾기</a></li>
-                    <li><a href="#">산다</a></li>
-                    <li><a href="#">팔다</a></li>
-                    <li><a href="#">무료 데이터</a></li>
-                </ul>
-                <div class="nav-buttons">
-                    <button>자료등록</button>
-                    <button>고객센터</button>
-                    <button>로그인</button>
-                </div>
-            </div>
-        </nav>
-    </header>
-
+    {% extends 'base.html' %}
+    {% block content %}
     <main>
-        <section class="search-section">
-            <div class="search-container">
-                <input type="text" placeholder="원하신 데이터를 검색하세요.">
-                <select>
-                    <option value="">카테고리</option>
-                    <!-- 더 많은 카테고리 선택사항을 추가하세요 -->
-                </select>
-                <button>찾기</button>
-            </div>
-        </section>
-
-        <section class="products-section">
-            <div class="products-container">
-                <!-- 제품 사진 두어 공유 -->
-                <div class="product-card">
-                    <img src="{{ url_for('categorySearch.static', filename='images/homepage-banner.jpg') }}" alt="Sneakers">
-                    <div class="product-info">
-                        <p class="category">Clothing & Shoes</p>
-                        <h3>SNEAKERS</h3>
+        <div class="main-container">
+            <!-- 필터 섹션 -->
+            <div id="filter-section" class="filter-section">
+                <div class="filter-container">
+                    <h3>Filters</h3>
+                    <!-- 필터 항목들 -->
+                    <div class="filter-group">
+                        <h4>가격</h4>
+                        <input type="radio" name="price" value="low"> ₩50,000 이하<br>
+                        <input type="radio" name="price" value="medium"> ₩100,000 이하<br>
+                        <input type="radio" name="price" value="high"> ₩200,000 이하<br>
                     </div>
-                </div>
-
-                <div class="product-card">
-                    <img src="{{ url_for('categorySearch.static', filename='images/homepage-banner.jpg') }}" alt="Sofa">
-                    <div class="product-info">
-                        <p class="category">Home & Living</p>
-                        <h3>SOFA</h3>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <img src="{{ url_for('categorySearch.static', filename='images/homepage-banner.jpg') }}" alt="Toy Train">
-                    <div class="product-info">
-                        <p class="category">Toys & Entertainment</p>
-                        <h3>TOY TRAIN</h3>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <img src="{{ url_for('categorySearch.static', filename='images/homepage-banner.jpg') }}" alt="Party Decors">
-                    <div class="product-info">
-                        <p class="category">Toys & Entertainment</p>
-                        <h3>PARTY DECORS</h3>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <img src="{{ url_for('categorySearch.static', filename='images/homepage-banner.jpg') }}" alt="Diamond Ring">
-                    <div class="product-info">
-                        <p class="category">Jewelry & Accessories</p>
-                        <h3>DIAMOND RING</h3>
-                    </div>
+                    <!-- 추가 필터 그룹들 -->
                 </div>
             </div>
+
+            <section class="products-section">
+                <div class="products-container" id="selected-products-container">
+                    {% if categories %}
+                        {% for category in categories %}
+                            <!-- 카테고리 카드 -->
+                            <div class="product-card" onclick="showFilterAndExpandCard('{{ category.id }}')">
+                                <img src="{{ url_for('categorySearch.static', filename='images/' + category.image_url) }}" alt="{{ category.name }}">
+                                <div class="product-info">
+                                    <p class="category">{{ category.name }}</p>
+                                    <h3>{{ category.name }}</h3>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>카테고리가 없습니다.</p>
+                    {% endif %}
+                </div>
+
+                <!-- 데이터셋 목록을 products-container와 같은 너비로 표현 -->
+                <div id="dataset-list-container" class="dataset-list-container" style=""></div>
+
+                <!-- 페이지네이션 -->
+                <div class="pagination">
+                    <button onclick="previousPage()">이전 페이지</button>
+                    <span>페이지 1 / 5</span>
+                    <button onclick="nextPage()">다음 페이지</button>
+                </div>
         </section>
+    </div>
     </main>
+    {% endblock %}
 </body>
-
 </html>

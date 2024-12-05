@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ data.name }} - 카테고리 상세 정보</title>
+    <link rel="stylesheet" href="{{ url_for('categorySearch.static', filename='css/categoryDetail.css') }}">
+    <script src="{{ url_for('categorySearch.static', filename='js/categoryDetail.js') }}" defer></script>
+</head>
+<body>
+    {% extends 'base.html' %}
+    {% block content %}
+    <div class="detail-container">
+        <!-- 제품 개요 섹션 -->
+        <div class="product-overview">
+            <div class="product-image">
+                <img src="/category/static/category/images/homepage-banner.jpg" alt="{{ data.name }}">
+            </div>
+            <div class="product-info">
+                <p class="manufacturer">제작자 이름: {{ data.manufacturer }}</p>
+                <h2>{{ data.name }}</h2>
+                <p class="details">
+                    <span class="sub-detail" style="font-size: 0.85em;">위치: {{ data.location }}</span> &bull; <span class="sub-detail" style="font-size: 0.85em;">데이터 타입: {{ data.data_type }}</span> &bull; <span class="sub-detail" style="font-size: 0.85em;">가격: {{ data.price }}원</span> &bull; <span class="sub-detail" style="font-size: 0.85em;">등록 기간: {{ data.time_period }}</span>
+                </p>
+                <p>{{ data.description }}</p>
+                <div class="tags">
+                    {% for tag in data.tags %}
+                        <span>{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- 데이터 분석 섹션 -->
+        <div class="analysis-section-container">
+            <button class="arrow-button left" onclick="scrollAnalysis(-1)">&#8249;</button>
+            <div class="analysis-section" id="analysis-section">
+                {% if data.analysis %}
+                    {% for analysis in data.analysis %}
+                    <div class="analysis-card">
+                        <img src="{{ url_for('categorySearch.static', filename='images/' + analysis.image_url) }}" alt="{{ analysis.title }}">
+                        <p>{{ analysis.title }}</p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>데이터 분석 정보가 없습니다.</p>
+                {% endif %}
+            </div>
+            <button class="arrow-button right" onclick="scrollAnalysis(1)">&#8250;</button>
+        </div>
+
+        <!-- 리뷰 섹션 -->
+        <div class="review-section">
+            <h3>리뷰
+                <div class="average-rating">
+                    <span class="rating-stars">
+                        {% for i in range(0, data.average_rating|int) %}&#9733;{% endfor %}
+                        {% for i in range(data.average_rating|int, 5) %}&#9734;{% endfor %}
+                    </span>
+                    평균 {{ data.average_rating }}점
+                </div>
+                <button class="review-button" onclick="openReviewPopup(); console.log('리뷰 작성 버튼이 클릭되었습니다.');">리뷰 작성</button>
+            </h3>
+            {% if data.reviews %}
+                {% for review in data.reviews %}
+                <div class="review">
+                    <img src="{{ url_for('categorySearch.static', filename='images/user-avatar.png') }}" alt="{{ review.user }}">
+                    <div class="review-info">
+                        <div class="review-rating">
+                            <div class="stars">
+                                {% for i in range(0, review.rating) %}&#9733;{% endfor %}
+                                {% for i in range(review.rating, 5) %}&#9734;{% endfor %}
+                            </div>
+                            <span class="rating">{{ review.rating }} / 5</span>
+                        </div>
+                        <p><strong>{{ review.user }}</strong></p>
+                        <p>{{ review.location }} - {{ review.time_ago }} 전에 구매</p>
+                        <p>{{ review.comment }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>리뷰가 없습니다.</p>
+            {% endif %}
+        </div>
+    </div>
+
+   <!-- 리뷰 작성 팝업 -->
+    <div class="popup-overlay" id="reviewPopup">
+        <div class="popup-content">
+            <button class="close-button" onclick="closeReviewPopup()">취소</button>
+            <h4>리뷰 작성</h4>
+            <div class="review-form">
+                <label for="reviewScore">Score:</label>
+                <div id="reviewScore" class="star-rating">
+                    &#9734; &#9734; &#9734; &#9734; &#9734;
+                </div>
+                <label for="reviewText">리뷰:</label>
+                <textarea id="reviewText" rows="4"></textarea>
+                <label for="reviewImage">이미지 첨부:</label>
+                <input type="file" id="reviewImage" accept="image/*">
+                <div class="selected-image-preview" id="selectedImagePreview"></div>
+                <div class="tag-section">
+                    <button class="tag-button">+</button>
+                    <button class="tag-button">쇼핑</button>
+                    <button class="tag-button">신발</button>
+                    <button class="tag-button">구매내역</button>
+                </div>
+                <button class="close-button" onclick="submitReview()">게시</button>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+    <script>
+        function scrollAnalysis(direction) {
+            const container = document.getElementById('analysis-section');
+            const scrollAmount = container.clientWidth / 3;
+            container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+        }
+
+        function openReviewPopup() {
+            const popup = document.getElementById('reviewPopup');
+            popup.style.display = 'flex'; // 팝업을 flex를 사용하여 중앙 정렬
+            document.body.style.overflow = 'hidden'; // 팝업이 열렸을 때 배경 스크롤 방지
+            console.log('리뷰 작성 팝업이 열렸습니다.');
+        }
+
+        function closeReviewPopup() {
+            const popup = document.getElementById('reviewPopup');
+            popup.style.display = 'none';
+            document.body.style.overflow = 'auto'; // 팝업이 닫혔을 때 스크롤 복원
+            console.log('리뷰 작성 팝업이 닫혔습니다.');
+        }
+
+        // 팝업 외부 클릭 시 닫기
+        window.onclick = function(event) {
+            const modal = document.getElementById('reviewPopup');
+            if (event.target == modal) {
+                closeReviewPopup();
+                console.log('팝업 외부를 클릭하여 팝업이 닫혔습니다.');
+            }
+        }
+    </script>
+
+    <!-- 더미 데이터 -->
+    {% set data = {
+        'name': '데이터 이름',
+        'manufacturer': '제작자 이름',
+        'location': '서울',
+        'data_type': 'CSV',
+        'price': 5000,
+        'time_period': '29 min ago',
+        'description': '푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵',
+        'tags': ['쇼핑', '신발', '구매내역'],
+        'analysis': [
+            {'title': 'Heatmap', 'image_url': 'Heatmap.png'},
+            {'title': '이상치', 'image_url': 'Candlestick.png'},
+            {'title': '신뢰도 지수?', 'image_url': 'Gauge.png'}
+        ],
+        'average_rating': 3.5,
+        'reviews': [
+            {
+                'user': '사용자 이름',
+                'rating': 3,
+                'location': '서울',
+                'time_ago': '10 min',
+                'comment': '푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵'
+            },
+            {
+                'user': '사용자 이름',
+                'rating': 4,
+                'location': '부산',
+                'time_ago': '1 hour',
+                'comment': '좋은 데이터셋입니다. 많은 도움이 되었습니다.'
+            },
+            {
+                'user': '사용자 이름',
+                'rating': 5,
+                'location': '대전',
+                'time_ago': '3 days',
+                'comment': '정말 유용한 정보입니다. 추천합니다!'
+            }
+        ]
+    } %}
+</body>
+</html>
