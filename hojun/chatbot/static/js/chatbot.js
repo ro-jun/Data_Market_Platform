@@ -5,11 +5,23 @@ const messagesSection = document.querySelector("#messages");
 const newChatBtn = document.querySelector("#new-chat-btn");
 const chatHistory = document.querySelector(".chat-history ul");
 
+// 초기 메시지 로드
+document.addEventListener("DOMContentLoaded", () => {
+    fetch("/chatbot/init")
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.message) {
+                addMessage(data.message, "bot");
+            }
+        })
+        .catch((error) => console.error("초기 메시지 로드 실패:", error));
+});
+
 // 메시지를 추가하는 함수
-function addMessage(message, sender = "user") {
+function addMessage(message, sender) {
     const messageDiv = document.createElement("div");
     messageDiv.classList.add("message", sender); // 사용자 또는 챗봇에 따라 스타일 적용
-    messageDiv.textContent = message;
+    messageDiv.innerHTML = message.replace(/\n/g, "<br>");
     messagesSection.appendChild(messageDiv);
     messagesSection.scrollTop = messagesSection.scrollHeight; // 스크롤을 가장 아래로 이동
 }
@@ -34,15 +46,6 @@ function addRecommendations(recommendations) {
     messagesSection.scrollTop = messagesSection.scrollHeight; // 스크롤을 가장 아래로 이동
 }
 
-// 서버에서 전달된 메세지 불러오기
-fetch("/chatbot/history", {
-    method: "GET",
-})
-    .then((response) => response.json())
-    .then((data) => {
-        data.history.forEach((msg) => addMessage(msg.content, msg.role));
-    });
-
 // 서버로 메시지 전송 및 응답 처리
 sendButton.addEventListener("click", () => {
     const message = userInput.value.trim();
@@ -61,7 +64,7 @@ sendButton.addEventListener("click", () => {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: message }),
+        body: JSON.stringify({ user_id: "default_user", message: message }), // user_id 포함
     })
         .then((response) => {
             if (!response.ok) {
@@ -70,6 +73,7 @@ sendButton.addEventListener("click", () => {
             return response.json();
         })
         .then((data) => {
+            console.log("서버 응답 데이터:", data); // 디버깅용 로그
             if (data.reply) {
                 addMessage(data.reply, "bot");
             }

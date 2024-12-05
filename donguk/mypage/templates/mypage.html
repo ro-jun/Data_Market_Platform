@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>데이터 관리</title>
+    <link rel="stylesheet" href="{{ url_for('mypage.static', filename='css/mypage.css') }}">
+</head>
+<body>
+    {% extends 'base.html' %}
+    {% block content %}
+
+    <main class="content">
+        <aside class="profile-sidebar">
+            <img src="{{ url_for('mypage.static', filename='images/profile.jpg') }}" alt="프로필 사진" class="profile-img">
+            <h2>홍길동님</h2>
+            <p>내 포인트: 100,000</p>
+            <p>구매 데이터 수: 100</p>
+            <p>찜한 데이터 수: 100</p>
+            <p>판매 데이터 수: 100</p>
+        </aside>
+
+        <section class="profile-content">
+            <div class="buttons">
+                <button class="tab-button active" id="profile-tab">프로필</button>
+                <button class="tab-button" id="purchase-tab">구매 데이터 관리</button>
+                <button class="tab-button" id="saved-tab">찜한 데이터</button>
+                <button class="tab-button" id="recent-tab">최근 본 데이터</button>
+                <button class="tab-button" id="sales-tab">판매 데이터 관리</button>
+            </div>
+
+            <div class="tab-content" id="profile-content">
+                <div class="profile-details">
+                    <img src="{{ url_for('mypage.static', filename='images/profile.jpg') }}" alt="홍길동" class="user-profile-img">
+                    <div class="profile-info">
+                        <p><strong>이메일</strong>: hongildong@syuin.ac.kr</p>
+                        <p><strong>전화번호</strong>: 010-1234-5678</p>
+                        <p><strong>포인트</strong>: 100,000 <button class="buy-button">구매</button></p>
+                        <div class="links">
+                            <a href="#">개인 정보 수정</a> | <a href="#">계정 연동</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content hidden" id="purchase-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>데이터 이름</th>
+                            <th>구매 날짜</th>
+                            <th>데이터 형식</th>
+                            <th>카테고리</th>
+                            <th>가격</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in sell_data %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ item.title }}</td>
+                            <td>{{ item.purchase_date }}</td>
+                            <td>{{ item.data_format }}</td>
+                            <td>{{ item.category }}</td>
+                            <td>{{ item.price }} 원</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-content hidden" id="saved-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>데이터 이름</th>
+                            <th>구매 날짜</th>
+                            <th>데이터 형식</th>
+                            <th>카테고리</th>
+                            <th>가격</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in sell_data %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ item.title }}</td>
+                            <td>{{ item.purchase_date }}</td>
+                            <td>{{ item.data_format }}</td>
+                            <td>{{ item.category }}</td>
+                            <td>{{ item.price }} 원</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-content hidden" id="recent-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>데이터 이름</th>
+                            <th>구매 날짜</th>
+                            <th>데이터 형식</th>
+                            <th>카테고리</th>
+                            <th>가격</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in sell_data %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ item.title }}</td>
+                            <td>{{ item.purchase_date }}</td>
+                            <td>{{ item.data_format }}</td>
+                            <td>{{ item.category }}</td>
+                            <td>{{ item.price }} 원</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 판매 데이터 관리 -->
+            <div class="tab-content hidden" id="sales-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>데이터 이름</th>
+                            <th>구매 날짜</th>
+                            <th>데이터 형식</th>
+                            <th>카테고리</th>
+                            <th>가격</th>
+                            <th>작업</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in sell_data %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ item.title }}</td>
+                            <td>{{ item.purchase_date }}</td>
+                            <td>{{ item.data_format }}</td>
+                            <td>{{ item.category }}</td>
+                            <td>{{ item.price }} 원</td>
+                            <td><button class="edit-button">수정</button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+    </main>
+
+    <footer class="footer">
+        &copy; 2024 Data Market Platform. All Rights Reserved.
+    </footer>
+
+    <script src="{{ url_for('mypage.static', filename='js/mypage.js') }}"></script>
+    {% endblock %}
+</body>
+</html>
