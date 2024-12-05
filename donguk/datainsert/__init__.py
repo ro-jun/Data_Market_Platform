@@ -53,7 +53,7 @@ def submit_data():
     data_collection.insert_one(new_data)
 
     return jsonify({"success": True, "message": "등록이 완료되었습니다!"})
-# 123
+# 1234
 # 파일 다운로드 API
 @datainsert_blueprint.route("/download/<file_id>/<filename>", methods=["GET"])
 def download_file(file_id, filename):
