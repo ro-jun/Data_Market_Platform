@@ -13,7 +13,7 @@
     <main class="content">
         <div class="upload-container">
             <h1>데이터 등록</h1>
-            <form id="data-form">
+            <form id="data-form" method="POST" action="/submit-data" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="title">데이터 제목</label>
                     <input type="text" id="title" name="title" required>
@@ -54,7 +54,7 @@
                     <ul id="file-list"></ul>
                 </div>
                 <button type="submit" class="submit-button">등록</button>
-            </form>
+        </form>
         </div>
     </main>
 

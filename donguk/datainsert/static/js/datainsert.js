@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropzone = document.getElementById('dropzone');
     const fileInput = document.getElementById('files');
     const fileList = document.getElementById('file-list');
-    const popup = docment.getElementById('popup');
+    const popup = document.getElementById('popup');
     const popupMessage = document.getElementById('popup-message');
     const closePopup = document.getElementById('close-popup');
     const mainCategory = document.getElementById('main-category');
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const categoryData = {
         "리포트": ["경영/경제", "공학/기술", "교육학", "농수산학", "특허감/창작", "법학", "사회과학", "생활/환경", "예체능", "의/약학", "인문/어학", "자연과학", "창업"],
         "논문": ["인문학", "사회과학", "자연과학", "공학", "농수해양학", "의약학", "예술체육학", "학위논문"],
-        "자기소개서": ["취업", "학교", "작성법", "면접준비", "기타u"],
+        "자기소개서": ["취업", "학교", "작성법", "면접준비", "기타"],
         "방송통신대": ["중간시험", "기말시험", "계절시험", "핵심요약노트", "출석대체 시험/과제"],
         "서식": ["각종계약서", "건설서식", "교육서식", "법률서식", "부서별서식", "생활서식", "업무서식", "회사서식"],
         "노하우": ["구매/판매대행", "글쓰기", "데이터분석", "마케팅", "블로그/스토어", "유튜브", "전자책/출판"]
@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedMain = mainCategory.value;
         const subOptions = categoryData[selectedMain] || [];
 
+        // 기존 옵션 초기화
         subCategory.innerHTML = '<option value="">세부 옵션 선택</option>';
         subOptions.forEach(option => {
             const opt = document.createElement('option');
@@ -59,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData(form); // 파일 포함 모든 데이터를 전송
 
         try {
-            const response = await fetch('/submit-data', {
+            const response = await fetch('/datainsert/submit-data', {
                 method: 'POST',
                 body: formData
             });
@@ -72,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert(result.message || "서버에서 오류가 발생했습니다.");
             }
         } catch (error) {
+            console.error('에러 발생:', error);
             alert('오류가 발생했습니다. 다시 시도해주세요.');
         }
     });
