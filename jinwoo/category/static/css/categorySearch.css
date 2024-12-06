@@ -1,3 +1,4 @@
+/* main-container 설정 */
 .main-container {
     display: flex;
     justify-content: center;
@@ -7,61 +8,205 @@
     padding: 0 20px;
     position: relative;
 }
+
+/* filter-section 설정 (기존) */
 .filter-section {
     position: absolute;
-    left: 0;
+    left: -180px;
     top: 0;
-    width: 150px;
+    width: 180px; /* 기존 150px보다 약간 넓게 조정 */
     padding: 15px;
     background: #fafafa;
     border: 1px solid #ddd;
-    display: none; /* 기본적으로 숨겨짐, JavaScript를 통해 보이게 설정 */
+    display: none; /* 기본적으로 숨기고, JavaScript로 토글 */
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    box-sizing: border-box;
+    border-radius: 4px; /* 모서리 살짝 둥글게 */
 }
+
+/* filter-container 내부 텍스트 기본 설정 */
+.filter-container h3 {
+    margin-top: 0;
+    font-size: 16px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+/* 각 필터 그룹 스타일 */
+.filter-group {
+    margin-bottom: 15px;
+}
+
+.filter-group h4 {
+    margin: 10px 0 5px 0;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* input, select 기본 스타일 */
+.filter-section input[type="text"],
+.filter-section input[type="number"],
+.filter-section input[type="date"],
+.filter-section select {
+    width: 100%;
+    padding: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
+/* 라디오, 체크박스 레이블 간격 */
+.filter-section label {
+    display: block;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+/* 라디오, 체크박스 input 간격 */
+.filter-section input[type="radio"],
+.filter-section input[type="checkbox"] {
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+/* 필터 적용/초기화 버튼 스타일 */
+.filter-actions {
+    text-align: right;
+}
+
+.filter-actions button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    margin-left: 5px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.filter-actions button:hover {
+    background-color: #0056b3;
+}
+
+/* 최소/최대 가격 input 특화 스타일 */
+.filter-section input[name="price_min"],
+.filter-section input[name="price_max"] {
+    width: calc(100% - 50px); /* '₩ 최소값' 등의 placeholder 고려 */
+}
+
+/* 전체적으로 라벨과 인풋 필드 사이 간격 조정 */
+.filter-section label > input,
+.filter-section input[type="radio"] + label,
+.filter-section input[type="checkbox"] + label {
+    vertical-align: middle;
+}
+
+/* 필터 섹션이 화면에 표시될 때 애니메이션 (선택사항) */
+.filter-section.show {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* products-section 설정 */
 .products-section {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-left: 270px; /* 필터 섹션 크기를 고려한 여백 */
 }
+
 .products-container {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 한 줄에 5개의 카드 */
+    grid-template-columns: repeat(5, 1fr);
     gap: 20px;
     width: 100%;
-    max-width: 1200px;
-}
-#selected-products-container{
-    height: 50%;
+    align-items: start; /* 카드 높이가 달라도 상단 정렬 유지 */
 }
 .product-card {
-    width: 100%; /* 그리드 셀의 전체 너비를 사용 */
-    cursor: pointer;
-    transition: all 0.5s ease-in-out; /* 선택 시 부드러운 애니메이션 효과 */
-    text-align: center;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
+    width: 200px;       /* 고정된 가로 크기 */
+    height: 200px;      /* 고정된 세로 크기 */
+    box-sizing: border-box;
+    overflow: hidden;   /* 내용이 넘칠 경우 숨김 */
+    
+    border: 1px solid #ddd;       /* 테두리 */
+    border-radius: 8px;           /* 모서리 둥글게 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #fff; /* 필요하다면 배경색 지정 */
+}
+
+/* 선택된 카드 - width를 넓혀서 가로로 확장 */
+.selected-product-card {
+    width: 400px;
+    border: 3px solid #007bff; /* 선택된 카드 강조 테두리 */
+    border-radius: 8px; 
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
+/* 이미지 설정 */
 .product-card img {
-    width: 100%; /* 가로는 카드의 너비를 꽉 채움 */
-    height: auto; /* 높이는 원래 비율 유지 */
-    max-height: 200px; /* 선택된 카드의 경우에도 높이는 고정 */
+    width: 100%;
+    height: auto;
     object-fit: cover;
+    flex-shrink: 0;
 }
-.product-card.selected-product-card {
-    grid-column: span 2; /* 선택된 카드는 가로로 두 열 차지 */
-    border: 3px solid #007bff; /* 선택된 카드 강조를 위한 테두리 */
+
+/* 텍스트 영역 */
+.product-card .product-info {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
 }
-.dataset-list-container{
+
+/* 카테고리와 제목에 ellipsis 적용 */
+.product-card .product-info p.category, 
+.product-card .product-info h3 {
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-card .product-info h3 {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.product-card .product-info p.category {
+    font-size: 0.9rem;
+    color: #333;
+}
+
+/* dataset-list-container 설정 */
+.dataset-list-container {
     display: grid; 
-    grid-template-columns: repeat(3, 1fr); 
+    grid-template-columns: repeat(2, 1fr); 
     gap: 10px; 
     margin-top: 50px;
     width: 100%; 
     max-width: 1200px; 
 }
+
+/* dataset-card 설정 */
 .dataset-card {
     display: flex;
     align-items: center;
@@ -71,18 +216,26 @@
     margin-bottom: 15px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
+/* dataset-card 이미지 설정 */
 .dataset-card img {
     width: 50px;
     height: 50px;
     margin-right: 20px;
 }
+
+/* dataset-card 내의 dataset-info 설정 */
 .dataset-card .dataset-info {
-    flex : 1;
+    flex: 1;
 }
+
+/* pagination 설정 */
 .pagination {
     margin-top: 20px;
     text-align: center;
 }
+
+/* pagination 버튼 설정 */
 .pagination button {
     padding: 8px 12px;
     margin: 0 5px;
@@ -91,7 +244,86 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s ease; /* 버튼의 hover 시 전환 애니메이션 추가 */
 }
+
 .pagination button:hover {
     background-color: #0056b3;
+}
+
+/* search-bar 설정 */
+.search-bar {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #f1f1f1;
+    gap: 10px;
+    width: 100%; /* 그리드 셀 전체 너비를 사용 */
+    box-sizing: border-box;
+    border-radius: 8px; /* 다른 요소와 동일한 둥근 테두리로 디자인 통일 */
+    margin-bottom: 20px;
+}
+
+.back-button {
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.search-input {
+    flex: 2;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.category-select {
+    flex: 1;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.search-button {
+    padding: 8px 16px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+    background-color: #555;
+}
+
+/* 개별 그리드 아이템 지정 */
+.grid-item {
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+/* 1열 1, 2행 - filter-section */
+.grid-item-1-1, .grid-item-1-2 {
+    grid-column: 1 / 2; /* 1열 */
+}
+
+/* 2열 1행 - search-bar */
+.grid-item-2-1 {
+    grid-column: 2 / 3; /* 2열 */
+    grid-row: 1 / 2; /* 1행 */
+}
+
+/* 2열 2행 - products-section */
+.grid-item-2-2 {
+    grid-column: 2 / 3; /* 2열 */
+    grid-row: 2 / 3; /* 2행 */
+}
+
+/* 2열 3행 - pagination */
+.grid-item-2-3 {
+    grid-column: 2 / 3; /* 2열 */
+    grid-row: 3 / 4; /* 3행 */
 }

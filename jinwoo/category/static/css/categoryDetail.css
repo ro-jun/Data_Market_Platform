@@ -225,14 +225,71 @@
     gap: 10px;
     flex-wrap: wrap;
 }
-.tag-button {
-    background: #e0e0e0;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    border: none;
+.tag-section {
+    position: relative;
+    display: inline-block;
+    margin-top: 10px;
 }
-.tag-button.selected {
-    background: #007bff;
-    color: #fff;
+
+.tag-button {
+    display: inline-block;
+    background-color: #f1f1f1;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.tag-button:hover {
+    background-color: #ccc;
+}
+
+/* 태그 팝업 스타일 */
+.tag-popup {
+    position: absolute;
+    top: 40px; /* +버튼 아래쪽에 표시 */
+    left: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 999;
+}
+
+.tag-popup-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tag-popup-content input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.tag-popup-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* 리뷰 별점 */
+.star-rating {
+    display: inline-block;
+}
+
+.star {
+    font-size: 2rem;
+    cursor: pointer;
+    display: inline-block;
+    user-select: none;
+    color: #ccc;
+    transition: color 0.2s ease;
+}
+
+.star.filled {
+    color: gold;
 }

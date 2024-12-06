@@ -93,7 +93,11 @@
             <div class="review-form">
                 <label for="reviewScore">Score:</label>
                 <div id="reviewScore" class="star-rating">
-                    &#9734; &#9734; &#9734; &#9734; &#9734;
+                    <span class="star" data-value="1">&#9734;</span>
+                    <span class="star" data-value="2">&#9734;</span>
+                    <span class="star" data-value="3">&#9734;</span>
+                    <span class="star" data-value="4">&#9734;</span>
+                    <span class="star" data-value="5">&#9734;</span>
                 </div>
                 <label for="reviewText">리뷰:</label>
                 <textarea id="reviewText" rows="4"></textarea>
@@ -101,10 +105,18 @@
                 <input type="file" id="reviewImage" accept="image/*">
                 <div class="selected-image-preview" id="selectedImagePreview"></div>
                 <div class="tag-section">
-                    <button class="tag-button">+</button>
-                    <button class="tag-button">쇼핑</button>
-                    <button class="tag-button">신발</button>
-                    <button class="tag-button">구매내역</button>
+                    <button class="tag-button" id="addTagButton">+</button>
+                    <!-- 태그 입력 팝업(모달) -->
+                    <div class="tag-popup" id="tagPopup" style="display:none;">
+                        <div class="tag-popup-content">
+                            <h4>태그 입력</h4>
+                            <input type="text" id="newTagInput" placeholder="태그를 입력하세요">
+                            <div class="tag-popup-actions">
+                                <button id="confirmTagButton">확인</button>
+                                <button id="cancelTagButton">취소</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <button class="close-button" onclick="submitReview()">게시</button>
             </div>
