@@ -28,13 +28,9 @@ def new_chat():
 # 메시지 처리
 @chatbot_blueprint.route("/send", methods=["POST"])
 def send_message_route():
-    # 요청 데이터 가져오기
-    user_id = request.json.get("user_id", "default_user")
     user_message = request.json.get("message")
 
-    # 요청 데이터 유효성 검사
     if not user_message:
         return jsonify({"reply": "메시지를 입력해주세요."}), 400
 
-    # 메시지 처리 로직 호출
-    return handle_user_message(user_id, user_message)
+    return handle_user_message(user_message)
