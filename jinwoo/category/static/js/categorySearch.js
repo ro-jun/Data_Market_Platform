@@ -1,162 +1,286 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // 페이지가 로드되면 기본 설정 스크립트 등 초기화 가능
-});
+    let currentProductPage = 1;
+    let currentDatasetPage = 1;
+    const itemsPerPage = { product: 5, dataset: 6 };
+    let currentMode = 'product'; // 'product' 또는 'dataset'
+    let selectedCategoryId = null;
+    let allCategories = []; // 모든 카테고리를 저장
 
-function showFilterAndExpandCard(categoryId) {
-    // 필터 섹션을 보이게 설정
-    const filterSection = document.getElementById('filter-section');
-    filterSection.style.display = 'block';
+    // 페이지네이션 요소
+    const paginationSpan = document.querySelector('.pagination span');
+    const previousButton = document.querySelector('.pagination button:first-child');
+    const nextButton = document.querySelector('.pagination button:last-child');
 
-    // 모든 카드 숨기기
-    const allProductCards = document.querySelectorAll('.product-card');
-    allProductCards.forEach(card => card.style.display = 'none');
-
-    // 선택된 상품 카드를 보이도록 설정
+    // 카테고리 선택 요소
+    const categorySelect = document.getElementById('categorySelect');
     const selectedProductsContainer = document.getElementById('selected-products-container');
-    selectedProductsContainer.innerHTML = ''; // 기존 카드 초기화
+    const datasetListContainer = document.getElementById('dataset-list-container');
 
-    // 예시 데이터를 사용해 카드 추가 (실제 데이터 사용 시 서버에서 데이터를 받아와서 렌더링)
-    const categories = [
-        { id: "sneakers", name: "Sneakers", image_url: "/category/static/category/images/homepage-banner.jpg" },
-        { id: "sofa", name: "Sofa", image_url: "/category/static/category/images/homepage-banner.jpg" },
-        { id: "toy_train", name: "Toy Train", image_url: "/category/static/category/images/homepage-banner.jpg" },
-        { id: "party_decors", name: "Party Decors", image_url: "/category/static/category/images/homepage-banner.jpg" },
-        { id: "diamond_ring", name: "Diamond Ring", image_url: "/category/static/category/images/homepage-banner.jpg" },
-    ];
+    // 초기 데이터 로드
+    fetchCategories(currentProductPage);
 
-    // 선택한 카드와 그 다음 3개의 카드를 찾음
-    const selectedIndex = categories.findIndex(category => category.id === categoryId);
-    const cardsToShow = [categories[selectedIndex]];
-
-    // 추가적으로 그 다음 3개의 카드를 추가
-    for (let i = 1; i <= 3; i++) {
-        const nextIndex = (selectedIndex + i) % categories.length;
-        cardsToShow.push(categories[nextIndex]);
+    // 카테고리 로드 함수
+    function fetchCategories(page = 1) {
+        fetch(`/category/api/categories?page=${page}&items_per_page=${itemsPerPage.product}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(categories => {
+                if (page === 1) {
+                    allCategories = categories; // 첫 페이지 로드 시 전체 카테고리 저장
+                } else {
+                    allCategories = allCategories.concat(categories); // 추가 페이지 로드 시 누적
+                }
+                populateProductCards(categories);
+                populateCategorySelect(categories);
+                const hasNext = categories.length === itemsPerPage.product;
+                renderPaginationUI(page, hasNext);
+            })
+            .catch(error => console.error('Error fetching product categories:', error));
     }
 
-    // 선택한 카드와 추가 3개의 카드 렌더링
-    cardsToShow.forEach((category, index) => {
-        const cardElement = document.createElement('div');
-        cardElement.className = 'product-card';
+    // 카테고리 선택 요소에 옵션 추가
+    function populateCategorySelect(categories) {
+        categorySelect.innerHTML = '<option value="">카테고리</option>';
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category.id;
+            option.textContent = category.name;
+            categorySelect.appendChild(option);
+        });
+    }
 
-        // 첫 번째 카드(선택된 카드)는 가로로 2열을 차지
-        if (index === 0) {
-            cardElement.classList.add('selected-product-card');
-            cardElement.style.gridColumn = 'span 2';
-            cardElement.style.border = '3px solid #007bff';
-        }
+    // 제품 카드 렌더링 함수
+    function populateProductCards(categories) {
+        selectedProductsContainer.innerHTML = ''; // 기존 카드 초기화
 
-        cardElement.innerHTML = `
-            <img src="${category.image_url}" alt="${category.name}" class="product-image">
-            <div class="product-info">
-                <p class="category">${category.name}</p>
-                <h3>${category.name}</h3>
-            </div>
-        `;
+        categories.forEach(category => {
+            const cardElement = document.createElement('div');
+            cardElement.className = 'product-card';
+            cardElement.setAttribute('data-category-id', category.id);
+            cardElement.onclick = () => showFilterAndExpandCard(category.id, 1);
 
-        // 카드 클릭 시 동일한 함수 호출
-        cardElement.onclick = () => showFilterAndExpandCard(category.id);
-
-        selectedProductsContainer.appendChild(cardElement);
-    });
-
-    // 상세 데이터셋 목록 표시 (데이터셋 목록 컨테이너)
-    showDatasetList(categoryId);
-}
-
-
-
-function showDatasetList(categoryId) {
-    const datasetListContainer = document.getElementById('dataset-list-container');
-    datasetListContainer.innerHTML = ''; // 기존 데이터셋 초기화
-
-    // 예시 데이터셋 (실제 데이터셋 사용 시 서버에서 데이터를 받아와서 렌더링)
-    const datasetList = {
-        "sneakers": [
-            {
-                brand: "Nike",
-                title: "2024 나이키 서울 판매 집계",
-                description: "Mollit in laborum tempor Lorem incididunt irure.",
-                price: "₩5000원",
-                location: "서울",
-                fileType: "CSV",
-                time: "29분 전"
-            },
-            {
-                brand: "Adidas",
-                title: "2024 아디다스 서울 판매 집계",
-                description: "Adipisicing elit Lorem incididunt eiusmod.",
-                price: "₩4500원",
-                location: "서울",
-                fileType: "CSV",
-                time: "1시간 전"
-            },
-            {
-                brand: "New Balance",
-                title: "2024 뉴발란스 서울 판매 집계",
-                description: "Ut labore et dolore magna aliqua.",
-                price: "₩4000원",
-                location: "서울",
-                fileType: "CSV",
-                time: "2시간 전"
-            },
-            {
-                brand: "Nike",
-                title: "2024 나이키 서울 판매 집계",
-                description: "Mollit in laborum tempor Lorem incididunt irure.",
-                price: "₩5000원",
-                location: "서울",
-                fileType: "CSV",
-                time: "29분 전"
-            },
-            {
-                brand: "Adidas",
-                title: "2024 아디다스 서울 판매 집계",
-                description: "Adipisicing elit Lorem incididunt eiusmod.",
-                price: "₩4500원",
-                location: "서울",
-                fileType: "CSV",
-                time: "1시간 전"
-            },
-            {
-                brand: "New Balance",
-                title: "2024 뉴발란스 서울 판매 집계",
-                description: "Ut labore et dolore magna aliqua.",
-                price: "₩4000원",
-                location: "서울",
-                fileType: "CSV",
-                time: "2시간 전"
-            }
-        ],
-        // 다른 카테고리 데이터를 여기에 추가
-    };
-
-    // 선택한 카테고리에 해당하는 데이터셋을 가져옴
-    const datasets = datasetList[categoryId];
-    if (datasets && datasets.length > 0) {
-        datasets.forEach(dataset => {
-            const datasetElement = document.createElement('div');
-            datasetElement.classList.add('dataset-card');
-            datasetElement.innerHTML = `
-                <img src="/category/static/category/images/homepage-banner.jpg" alt="${dataset.brand}">
-                <div class="dataset-info">
-                    <h5 style='margin:0'>${dataset.brand}</h4>
-                    <h4>${dataset.title}</h3>
-                    <p>${dataset.description}</p>
-                    <div style='font-size: 0.65rem;'>
-                        <span>📍 ${dataset.location}</span> · 
-                        <span>📄 ${dataset.fileType}</span> · 
-                        <span>💰 ${dataset.price}</span> · 
-                        <span>🕒 ${dataset.time}</span>
-                    </div>
+            cardElement.innerHTML = `
+                <img src="${category.image_url}" alt="${category.name}" class="product-image" style="width:100px; height:100px;">
+                <div class="product-info">
+                    <p class="category">${category.name}</p>
+                    <h3>${category.name}</h3>
                 </div>
             `;
-            datasetElement.onclick = () => {
-                location.href = `/category/detail/${categoryId}`; // dataset-card 클릭 시 category_detail 페이지로 이동
-            };
-            datasetListContainer.appendChild(datasetElement);
+
+            selectedProductsContainer.appendChild(cardElement);
         });
-    } else {
-        datasetListContainer.innerHTML = "<p>해당 카테고리에 데이터셋이 없습니다.</p>";
     }
-}
+
+    // 페이지네이션 렌더링 함수
+    function renderPaginationUI(current, hasNext) {
+        paginationSpan.textContent = `페이지 ${current}`;
+
+        // 이전 버튼 활성화 여부
+        previousButton.disabled = (current === 1);
+
+        // 다음 버튼 활성화 여부
+        nextButton.disabled = !hasNext;
+    }
+
+    // 페이지네이션 버튼 클릭 이벤트
+    previousButton.addEventListener('click', previousPage);
+    nextButton.addEventListener('click', nextPage);
+
+    // 이전 페이지 함수
+    function previousPage() {
+        if (currentMode === 'product' && currentProductPage > 1) {
+            currentProductPage--;
+            fetchCategories(currentProductPage);
+        } else if (currentMode === 'dataset' && currentDatasetPage > 1) {
+            currentDatasetPage--;
+            loadDatasetPage(currentDatasetPage);
+        }
+    }
+
+    // 다음 페이지 함수
+    function nextPage() {
+        if (currentMode === 'product') {
+            currentProductPage++;
+            fetchCategories(currentProductPage);
+        } else if (currentMode === 'dataset') {
+            currentDatasetPage++;
+            loadDatasetPage(currentDatasetPage);
+        }
+    }
+
+    // 카테고리 카드 클릭 시 호출되는 함수
+    function showFilterAndExpandCard(categoryId, page = 1) {
+        selectedCategoryId = categoryId;
+        currentMode = 'dataset';
+        currentDatasetPage = page;
+
+        // 필터 섹션 보이기
+        const filterSection = document.getElementById('filter-section');
+        filterSection.style.display = 'block';
+
+        // 모든 product-card를 숨기기
+        const allProductCards = document.querySelectorAll('.product-card');
+        allProductCards.forEach(card => card.style.display = 'none');
+
+        // 선택된 카테고리와 다음 3개 카테고리 표시
+        fetch(`/category/api/categories/${categoryId}/expand`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json(); // JSON 데이터 반환
+            })
+            .then(data => {
+                const cardsToShow = data.categories; // 선택된 카드와 추가 카드 리스트
+                selectedProductsContainer.innerHTML = ''; // 기존 카드 초기화
+
+                cardsToShow.forEach((category, index) => {
+                    const cardElement = document.createElement('div');
+                    cardElement.className = 'product-card';
+
+                    // 첫 번째 카드(선택된 카드)는 가로로 2열을 차지
+                    if (index === 0) {
+                        cardElement.classList.add('selected-product-card');
+                        cardElement.style.gridColumn = 'span 2';
+                        cardElement.style.border = '3px solid #007bff';
+                    }
+
+                    cardElement.innerHTML = `
+                        <img src="${category.image_url}" alt="${category.name}" class="product-image" style="width:100px; height:100px;">
+                        <div class="product-info">
+                            <p class="category">${category.name}</p>
+                            <h3>${category.name}</h3>
+                        </div>
+                    `;
+
+                    // 카드 클릭 시 동일한 함수 호출
+                    cardElement.onclick = () => showFilterAndExpandCard(category.id, 1);
+
+                    selectedProductsContainer.appendChild(cardElement);
+                });
+
+                // 상세 데이터셋 목록 표시
+                loadDatasetPage(1);
+            })
+            .catch(error => console.error("Error fetching expanded category data:", error));
+    }
+
+    // 데이터셋 페이지 로드 함수
+    function loadDatasetPage(page) {
+        fetch(`/category/api/datasets?category_id=${selectedCategoryId}&page=${page}&items_per_page=${itemsPerPage.dataset}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const datasets = data.datasets;
+                datasetListContainer.innerHTML = '';
+
+                if (datasets.length > 0) {
+                    datasets.forEach(dataset => {
+                        const datasetElement = createDatasetCard(dataset);
+                        datasetListContainer.appendChild(datasetElement);
+                    });
+
+                    const hasNext = datasets.length === itemsPerPage.dataset;
+                    renderPaginationUI(page, hasNext);
+                } else {
+                    datasetListContainer.innerHTML = "<p>해당 카테고리에 데이터셋이 없습니다.</p>";
+                    renderPaginationUI(page, false);
+                }
+            })
+            .catch(error => console.error("Error fetching datasets:", error));
+    }
+
+    // 데이터셋 카드 생성 함수
+    function createDatasetCard(dataset) {
+        const div = document.createElement('div');
+        div.classList.add('dataset-card');
+        div.innerHTML = `
+            <img src="${dataset.image_url}" alt="${dataset.title}" class="dataset-image" style="width:100px; height:100px;">
+            <div class="dataset-info">
+                <h5>${dataset.title}</h5>
+                <p>${dataset.description}</p>
+                <div class="dataset-meta" style='font-size: 0.65rem;'>
+                    <span>📄 ${dataset.fileType}</span> · 
+                    <span>💰 ${dataset.price}</span> · 
+                    <span>⌛️ ${dataset.time}</span>
+                </div>
+            </div>
+        `;
+        div.onclick = () => {
+            location.href = `/category/detail/${selectedCategoryId}`;
+        };
+        return div;
+    }
+
+    // 필터 적용 및 초기화 함수 (추가 구현 필요)
+    function applyFilters() {
+        // 필터링 로직 구현
+        alert('필터가 적용되었습니다.');
+    }
+
+    function resetFilters() {
+        // 필터 초기화 로직 구현
+        alert('필터가 초기화되었습니다.');
+    }
+
+    // 검색 수행 함수 (추가 구현 필요)
+    function performSearch() {
+        const searchQuery = document.getElementById('searchInput').value.trim();
+        const selectedCategory = categorySelect.value;
+
+        if (!searchQuery && !selectedCategory) {
+            alert("검색어 또는 카테고리를 입력하세요!");
+            return;
+        }
+
+        let searchUrl = `/category/api/search?`;
+        if (searchQuery) {
+            searchUrl += `query=${encodeURIComponent(searchQuery)}&`;
+        }
+        if (selectedCategory) {
+            searchUrl += `category=${encodeURIComponent(selectedCategory)}`;
+        }
+
+        fetch(searchUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 검색 결과를 처리하고 페이지에 표시 (추가 구현 필요)
+                console.log("검색 결과:", data);
+                datasetListContainer.innerHTML = ''; // 기존 데이터 초기화
+                if (data.length > 0) {
+                    data.forEach(dataset => {
+                        const datasetElement = createDatasetCard(dataset);
+                        datasetListContainer.appendChild(datasetElement);
+                    });
+                    // 페이지네이션 필요 여부 판단
+                    const hasNext = data.length === itemsPerPage.dataset;
+                    renderPaginationUI(currentDatasetPage, hasNext);
+                } else {
+                    datasetListContainer.innerHTML = "<p>검색 결과가 없습니다.</p>";
+                    renderPaginationUI(currentDatasetPage, false);
+                }
+            })
+            .catch(error => {
+                console.error("Error performing search:", error);
+                datasetListContainer.innerHTML = "<p>검색 중 오류가 발생했습니다. 다시 시도해주세요.</p>";
+            });
+    }
+
+    // 뒤로 가기 함수 (추가 구현 필요)
+    function goBack() {
+        window.history.back();
+    }
+});

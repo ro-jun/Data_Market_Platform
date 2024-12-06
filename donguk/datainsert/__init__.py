@@ -1,15 +1,14 @@
-from flask import Blueprint, render_template, request, jsonify, send_file
-from pymongo import MongoClient
+# donguk/datainsert/__init__.py
+from flask import Blueprint, render_template, request, jsonify, send_file, current_app
 from bson import Binary, ObjectId
 import io
 
 # Blueprint 생성
 datainsert_blueprint = Blueprint("datainsert", __name__, template_folder="templates", static_folder="static")
 
-# MongoDB 연결 설정
-client = MongoClient("mongodb://localhost:27017/")
-db = client.dataMarket
-data_collection = db.data
+# 데이터 저장 API에 접근할 수 있도록 current_app을 사용
+def get_data_collection():
+    return current_app.config['MONGO_DB'].data
 
 # 데이터 등록 페이지
 @datainsert_blueprint.route("/", methods=["GET"])
@@ -19,6 +18,8 @@ def datainsert():
 # 데이터 저장 API
 @datainsert_blueprint.route("/submit-data", methods=["POST"])
 def submit_data():
+    data_collection = get_data_collection()
+    
     # 요청 데이터 가져오기
     title = request.form.get("title")
     price = request.form.get("price")
@@ -34,12 +35,13 @@ def submit_data():
     # 파일을 BSON(Binary) 형태로 저장
     file_data = []
     for file in files:
-        binary_file = Binary(file.read())  # 파일 데이터를 바이너리로 변환
-        file_data.append({
-            "filename": file.filename,
-            "content": binary_file,
-            "content_type": file.content_type
-        })
+        if file:
+            binary_file = Binary(file.read())  # 파일 데이터를 바이너리로 변환
+            file_data.append({
+                "filename": file.filename,
+                "content": binary_file,
+                "content_type": file.content_type
+            })
 
     # MongoDB에 데이터 저장
     new_data = {
@@ -53,10 +55,12 @@ def submit_data():
     data_collection.insert_one(new_data)
 
     return jsonify({"success": True, "message": "등록이 완료되었습니다!"})
-# 1234
+
 # 파일 다운로드 API
 @datainsert_blueprint.route("/download/<file_id>/<filename>", methods=["GET"])
 def download_file(file_id, filename):
+    data_collection = get_data_collection()
+    
     try:
         # MongoDB에서 해당 데이터 찾기
         data = data_collection.find_one({"_id": ObjectId(file_id)})
@@ -64,7 +68,7 @@ def download_file(file_id, filename):
             return jsonify({"success": False, "message": "파일을 찾을 수 없습니다!"}), 404
 
         # 파일 데이터 추출
-        for file in data["files"]:
+        for file in data.get("files", []):
             if file["filename"] == filename:
                 return send_file(
                     io.BytesIO(file["content"]),

@@ -1,11 +1,10 @@
+<!-- jinwoo/category/templates/categorySearch.html -->
 <!DOCTYPE html>
 <html lang="ko">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>데테크 - 데이터 찾기</title>
-    <!-- CSS 파일의 경로를 정확히 설정 -->
+    <title>카테고리 검색</title>
     <link rel="stylesheet" href="{{ url_for('categorySearch.static', filename='css/categorySearch.css') }}">
     <script src="{{ url_for('categorySearch.static', filename='js/categorySearch.js') }}" defer></script>
 </head>
@@ -18,7 +17,7 @@
         <div class="grid-container">
 
             <!-- 1열 1행 - filter-section -->
-            <div class="filter-section grid-item grid-item-1-1" id="filter-section">
+            <div class="filter-section grid-item grid-item-1-1" id="filter-section" style="display: none;">
                 <div class="filter-container">
                     <h3>Filters</h3>
                     
@@ -70,7 +69,7 @@
                         <label><input type="checkbox" name="data_type" value="pdf"> PDF</label>
                     </div>
                     
-                    <!-- 적용 / 초기화 버튼 (선택사항) -->
+                    <!-- 적용 / 초기화 버튼 -->
                     <div class="filter-actions" style="margin-top:10px;">
                         <button type="button" onclick="applyFilters()">필터 적용</button>
                         <button type="button" onclick="resetFilters()">초기화</button>
@@ -84,9 +83,7 @@
                 <input type="text" id="searchInput" placeholder="원하시는 데이터를 검색하세요." class="search-input">
                 <select id="categorySelect" class="category-select">
                     <option value="">카테고리</option>
-                    {% for category in categories %}
-                        <option value="{{ category.id }}">{{ category.name }}</option>
-                    {% endfor %}
+                    <!-- 카테고리 옵션은 JavaScript에서 동적으로 추가 -->
                 </select>
                 <button onclick="performSearch()" class="search-button">찾기</button>
             </div>
@@ -94,20 +91,7 @@
             <!-- 2열 2행 - products-section -->
             <section class="products-section grid-item grid-item-2-2">
                 <div class="products-container" id="selected-products-container">
-                    {% if categories %}
-                        {% for category in categories %}
-                            <!-- 카테고리 카드 -->
-                            <div class="product-card" onclick="showFilterAndExpandCard('{{ category.id }}')">
-                                <img src="{{ url_for('categorySearch.static', filename='images/' + category.image_url) }}" alt="{{ category.name }}">
-                                <div class="product-info">
-                                    <p class="category">{{ category.name }}</p>
-                                    <h3>{{ category.name }}</h3>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <p>카테고리가 없습니다.</p>
-                    {% endif %}
+                    <!-- 카테고리 카드도 JavaScript에서 동적으로 추가 -->
                 </div>
             </section>
 
@@ -116,9 +100,9 @@
 
             <!-- pagination -->
             <div class="pagination">
-                <button onclick="previousPage()">이전 페이지</button>
-                <span>페이지 1 / 5</span>
-                <button onclick="nextPage()">다음 페이지</button>
+                <button>이전</button>
+                <span>페이지 1</span>
+                <button>다음</button>
             </div>
 
         </div>

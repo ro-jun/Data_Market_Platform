@@ -4,6 +4,7 @@ from hojun.chatbot import chatbot_blueprint
 from jinwoo.category import categorySearch_blueprint
 from donguk.mypage import mypage_blueprint
 from donguk.datainsert import datainsert_blueprint
+from pymongo import MongoClient
 import logging
 import os
 
@@ -11,6 +12,10 @@ import os
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
+# MongoDB 연결 설정
+client = MongoClient("mongodb://localhost:27017/")
+db = client.dataMarket
+app.config['MONGO_DB'] = db
 
 # Blueprint 등록
 app.register_blueprint(homepage_blueprint, url_prefix="/")  # 홈페이지 경로

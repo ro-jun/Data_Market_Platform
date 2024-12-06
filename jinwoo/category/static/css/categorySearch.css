@@ -327,3 +327,8 @@
     grid-column: 2 / 3; /* 2열 */
     grid-row: 3 / 4; /* 3행 */
 }
+
+.pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

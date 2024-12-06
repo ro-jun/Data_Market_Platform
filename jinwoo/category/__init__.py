@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, jsonify, request
+from pymongo import MongoClient
 
 # Blueprint 생성
 categorySearch_blueprint = Blueprint(
@@ -9,49 +10,104 @@ categorySearch_blueprint = Blueprint(
     static_url_path='/static/category'
 )
 
+# MongoDB 연결
+client = MongoClient("mongodb://localhost:27017/")
+db = client.dataMarket  # 데이터베이스 이름이 'dataMarket'이라고 가정
+
 # 카테고리 검색 페이지 라우트
 @categorySearch_blueprint.route("/", methods=['GET'])
 def categorySearch():
-    categories = [
-        {"id": "sneakers", "name": "Sneakers", "image_url": "homepage-banner.jpg"},
-        {"id": "sofa", "name": "Sofa", "image_url": "homepage-banner.jpg"},
-        {"id": "toy_train", "name": "Toy Train", "image_url": "homepage-banner.jpg"},
-        {"id": "party_decors", "name": "Party Decors", "image_url": "homepage-banner.jpg"},
-        {"id": "diamond_ring", "name": "Diamond Ring", "image_url": "homepage-banner.jpg"},
-        {"id": "sofa", "name": "Sofa", "image_url": "homepage-banner.jpg"},
-        {"id": "toy_train", "name": "Toy Train", "image_url": "homepage-banner.jpg"},
-        {"id": "party_decors", "name": "Party Decors", "image_url": "homepage-banner.jpg"},
-        {"id": "diamond_ring", "name": "Diamond Ring", "image_url": "homepage-banner.jpg"},
-        {"id": "sofa", "name": "Sofa", "image_url": "homepage-banner.jpg"},
-        {"id": "toy_train", "name": "Toy Train", "image_url": "homepage-banner.jpg"},
-        {"id": "party_decors", "name": "Party Decors", "image_url": "homepage-banner.jpg"},
-        {"id": "diamond_ring", "name": "Diamond Ring", "image_url": "homepage-banner.jpg"},
-        {"id": "sofa", "name": "Sofa", "image_url": "homepage-banner.jpg"},
-        {"id": "sofa", "name": "Sofa", "image_url": "homepage-banner.jpg"},
-    ]
-
-    # 서버 로그에 데이터를 출력하여 확인
-    print("전달될 카테고리 데이터:", categories)
-
+    categories = list(db.categories.find({}, {"_id": 0}))
     return render_template('categorySearch.html', categories=categories)
 
+# 카테고리 상세 페이지 라우트
 @categorySearch_blueprint.route('/detail/<category_id>', methods=['GET'])
 def category_detail(category_id):
-    # 상세 페이지에 필요한 데이터 정의
-    category_data = {
-        "sneakers": {"name": "Sneakers", "description": "편안하고 멋진 스니커즈.", "products": [
-            {"brand": "Nike", "event": "2024 나이키 서울 캠페인", "price": "₩120,000"},
-            {"brand": "Adidas", "event": "2024 아디다스 서울 캠페인", "price": "₩110,000"},
-            {"brand": "New Balance", "event": "2024 뉴발란스 서울 캠페인", "price": "₩100,000"}
-        ]},
-        "sofa": {"name": "Sofa", "description": "편안한 거실 소파."},
-        "toy_train": {"name": "Toy Train", "description": "아이들을 위한 재미있는 장난감 기차."},
-        "party_decors": {"name": "Party Decors", "description": "파티를 위한 멋진 장식품들."},
-        "diamond_ring": {"name": "Diamond Ring", "description": "아름다운 다이아몬드 반지."},
-    }
-
-    # category_id에 해당하는 데이터를 가져옴
-    data = category_data.get(category_id, {"name": "Unknown", "description": "해당 카테고리의 정보를 찾을 수 없습니다."})
+    # category_id를 기반으로 카테고리 정보 가져오기
+    category = db.categories.find_one({"id": category_id}, {"_id": 0})
+    if not category:
+        return render_template('categoryDetail.html', data={
+            "name": "Unknown", 
+            "description": "해당 카테고리의 정보를 찾을 수 없습니다."
+        })
     
-    # category_detail.html 템플릿을 렌더링하고 데이터 전달
-    return render_template('categoryDetail.html', data=data)
+    # 해당 카테고리에 속한 데이터셋 가져오기
+    datasets = list(db.datasets.find({"category_id": category_id}, {"_id": 0}))
+    
+    # 데이터셋 정보를 카테고리 데이터에 추가
+    category['datasets'] = datasets
+    
+    return render_template('categoryDetail.html', data=category)
+
+# 카테고리 목록 API (페이지네이션 지원)
+@categorySearch_blueprint.route('/api/categories', methods=['GET'])
+def api_get_categories_paginated():
+    try:
+        page = int(request.args.get('page', 1))
+        items_per_page = int(request.args.get('items_per_page', 15))
+    except ValueError:
+        return jsonify({"error": "page and items_per_page must be integers"}), 400
+
+    # MongoDB에서 모든 카테고리 가져오기
+    categories = list(db.categories.find({}, {"_id": 0}))
+    total_items = len(categories)
+    total_pages = (total_items + items_per_page - 1) // items_per_page  # 올림 처리
+
+    # 페이지 범위 조정
+    if page < 1:
+        page = 1
+    elif page > total_pages:
+        page = total_pages if total_pages > 0 else 1
+
+    start_index = (page - 1) * items_per_page
+    end_index = start_index + items_per_page
+    paginated_categories = categories[start_index:end_index]
+
+    return jsonify(paginated_categories)
+
+# 특정 카테고리의 데이터셋 목록 API (페이지네이션 적용)
+@categorySearch_blueprint.route('/api/datasets', methods=['GET'])
+def api_get_datasets():
+    category_id = request.args.get('category_id')
+    if not category_id:
+        return jsonify({"error": "category_id is required"}), 400
+
+    try:
+        page = int(request.args.get('page', 1))
+        items_per_page = int(request.args.get('items_per_page', 6))
+    except ValueError:
+        return jsonify({"error": "page and items_per_page must be integers"}), 400
+
+    # MongoDB에서 해당 카테고리의 데이터셋 가져오기
+    datasets = list(db.datasets.find({"category_id": category_id}, {"_id": 0}))
+    total_items = len(datasets)
+
+    # 페이지 범위 조정
+    if page < 1:
+        page = 1
+
+    start_index = (page - 1) * items_per_page
+    end_index = start_index + items_per_page
+    paginated_datasets = datasets[start_index:end_index]
+
+    return jsonify({
+        "datasets": paginated_datasets
+    })
+
+# 특정 카테고리의 선택 및 확장 API
+@categorySearch_blueprint.route('/api/categories/<category_id>/expand', methods=['GET'])
+def get_expanded_categories(category_id):
+    categories = list(db.categories.find({}, {"_id": 0}))
+    
+    # 선택된 카테고리의 인덱스 찾기
+    selected_index = next((index for (index, d) in enumerate(categories) if d["id"] == category_id), None)
+    if selected_index is None:
+        return jsonify({"error": "Category not found"}), 404
+
+    # 선택된 카테고리와 그 다음 3개의 카테고리 선택
+    cards_to_show = [categories[selected_index]]
+    for i in range(1, 4):  # 선택된 카테고리 이후 3개의 카테고리
+        next_index = (selected_index + i) % len(categories)
+        cards_to_show.append(categories[next_index])
+
+    return jsonify({"categories": cards_to_show})
