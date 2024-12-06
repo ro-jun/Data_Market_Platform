@@ -1,3 +1,4 @@
+# hojun/chatbot/similar_search.py
 from hojun.chatbot.vector_db_setup import index
 from hojun.chatbot.llm_setup import embeddings
 
@@ -16,4 +17,15 @@ def search_similar_data(collected_data, similarity_threshold=0.5, fallback_thres
         else [match for match in results['matches'] if match['score'] >= fallback_threshold]
     )
 
-    return recommendations
+    # JSON 직렬화 가능한 형태로 변환
+    recommendations_dict = []
+    for match in recommendations:
+        # match는 {'id': ..., 'score': ..., 'metadata': ...} 형태의 dict일 가능성이 높음
+        # 만약 값 중 JSON 직렬화 불가능한 것이 있다면 적절히 변환/삭제 필요
+        recommendations_dict.append({
+            "id": match.get("id"),
+            "score": match.get("score"),
+            "metadata": match.get("metadata")  # 보통 metadata는 dict 형태이므로 직렬화 가능
+        })
+
+    return recommendations_dict
