@@ -3,7 +3,7 @@ from pymongo import MongoClient
 # MongoDB 연결 설정
 client = MongoClient("mongodb://localhost:27017/")
 db = client.dataMarket
-data_collection = db.data
+data_collection = db.datasets
 
 
 # 저장된 파일 복원 함수

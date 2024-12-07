@@ -8,9 +8,18 @@ from werkzeug.utils import secure_filename
 # Blueprint 생성
 datainsert_blueprint = Blueprint("datainsert", __name__, template_folder="templates", static_folder="static")
 
+CATEGORY_MAP = {
+    "리포트": "report",
+    "논문": "thesis",
+    "자기소개서": "resume",
+    "방송통신대": "broadcast",
+    "서식": "form",
+    "노하우": "knowhow"
+}
+
 # 데이터 저장 API에 접근할 수 있도록 current_app을 사용
 def get_data_collection():
-    return current_app.config['MONGO_DB'].data
+    return current_app.config['MONGO_DB'].datasets
 
 # donguk/datafile 폴더를 업로드 폴더로 지정
 # 현재 파일(__init__.py)의 위치: donguk/datainsert/
@@ -40,6 +49,11 @@ def submit_data():
     if not title or not price or not main_category or not sub_category or not description:
         return jsonify({"success": False, "message": "모든 필드를 입력해주세요!"}), 400
 
+    # 메인 카테고리를 영문 ID로 변환
+    category_id = CATEGORY_MAP.get(main_category)
+    if not category_id:
+        return jsonify({"success": False, "message": "유효하지 않은 메인 카테고리입니다!"}), 400
+    
     file_data = []
     for file in files:
         # 파일명 안전하게 처리
@@ -62,10 +76,9 @@ def submit_data():
     new_data = {
         "title": title,
         "price": price,
-        "main_category": main_category,
+        "category_id": category_id,
         "sub_category": sub_category,
         "description": description,
-        "files": file_data,
     }
     data_collection.insert_one(new_data)
 

@@ -21,7 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1계층 변경 시 2계층 업데이트
     mainCategory.addEventListener('change', () => {
         const selectedMain = mainCategory.value;
+        console.log(`선택된 메인 카테고리: ${selectedMain}`); // 디버깅 로그 추가
+
         const subOptions = categoryData[selectedMain] || [];
+        console.log(`세부 옵션: ${subOptions}`); // 디버깅 로그 추가
 
         // 기존 옵션 초기화
         subCategory.innerHTML = '<option value="">세부 옵션 선택</option>';

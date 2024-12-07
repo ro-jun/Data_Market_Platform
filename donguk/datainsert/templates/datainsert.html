@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>데이터 등록</title>
     <link rel="stylesheet" href="{{ url_for('datainsert.static', filename='css/datainsert.css') }}">
+    <script src="{{ url_for('datainsert.static', filename='js/datainsert.js') }}"></script>
 </head>
 
 <body>
@@ -64,7 +65,6 @@
             <button id="close-popup">확인</button>
         </div>
     </div>
-    <script src="{{ url_for('datainsert.static', filename='js/datainsert.js') }}"></script>
     {% endblock %}
 </body>
 </html>
