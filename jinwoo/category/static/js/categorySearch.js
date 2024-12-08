@@ -64,9 +64,8 @@ document.addEventListener("DOMContentLoaded", function () {
             cardElement.onclick = () => showFilterAndExpandCard(category.id, 1);
 
             cardElement.innerHTML = `
-                <img src="${category.image_url}" alt="${category.name}" class="product-image" style="width:100px; height:100px;">
+                <img src="static/category/images/icon/big-category/${category.id}.png" alt="${category.name}" class="product-image" style="width:100px; height:100px;">
                 <div class="product-info">
-                    <p class="category">${category.name}</p>
                     <h3>${category.name}</h3>
                 </div>
             `;
@@ -117,6 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
         selectedCategoryId = categoryId;
         currentMode = 'dataset';
         currentDatasetPage = page;
+        console.log(selectedCategoryId)
 
         // 필터 섹션 보이기
         const filterSection = document.getElementById('filter-section');
@@ -150,9 +150,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
                     cardElement.innerHTML = `
-                        <img src="${category.image_url}" alt="${category.name}" class="product-image" style="width:100px; height:100px;">
+                        <img src="static/category/images/icon/big-category/${category.id}.png" alt="${category.name}" class="product-image" style="width:100px; height:100px;">
                         <div class="product-info">
-                            <p class="category">${category.name}</p>
                             <h3>${category.name}</h3>
                         </div>
                     `;
@@ -181,6 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(data => {
                 const datasets = data.datasets;
                 datasetListContainer.innerHTML = '';
+                console.log(data)
 
                 if (datasets.length > 0) {
                     datasets.forEach(dataset => {

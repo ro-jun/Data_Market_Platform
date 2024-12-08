@@ -48,11 +48,6 @@ def submit_data():
     # 데이터 유효성 확인
     if not title or not price or not main_category or not sub_category or not description:
         return jsonify({"success": False, "message": "모든 필드를 입력해주세요!"}), 400
-
-    # 메인 카테고리를 영문 ID로 변환
-    category_id = CATEGORY_MAP.get(main_category)
-    if not category_id:
-        return jsonify({"success": False, "message": "유효하지 않은 메인 카테고리입니다!"}), 400
     
     file_data = []
     for file in files:
@@ -76,7 +71,7 @@ def submit_data():
     new_data = {
         "title": title,
         "price": price,
-        "category_id": category_id,
+        "main_category": main_category,
         "sub_category": sub_category,
         "description": description,
     }

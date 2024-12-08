@@ -144,7 +144,7 @@
     
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     background-color: #fff; /* 필요하다면 배경색 지정 */
 }
@@ -177,23 +177,18 @@
 }
 
 /* 카테고리와 제목에 ellipsis 적용 */
-.product-card .product-info p.category, 
 .product-card .product-info h3 {
     margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: center;
 }
 
 .product-card .product-info h3 {
     font-size: 1rem;
     font-weight: bold;
     margin-bottom: 5px;
-}
-
-.product-card .product-info p.category {
-    font-size: 0.9rem;
-    color: #333;
 }
 
 /* dataset-list-container 설정 */
