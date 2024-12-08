@@ -4,18 +4,11 @@ from bson import Binary, ObjectId
 import io
 import os
 from werkzeug.utils import secure_filename
+import uuid
+from datetime import datetime
 
 # Blueprint 생성
 datainsert_blueprint = Blueprint("datainsert", __name__, template_folder="templates", static_folder="static")
-
-CATEGORY_MAP = {
-    "리포트": "report",
-    "논문": "thesis",
-    "자기소개서": "resume",
-    "방송통신대": "broadcast",
-    "서식": "form",
-    "노하우": "knowhow"
-}
 
 # 데이터 저장 API에 접근할 수 있도록 current_app을 사용
 def get_data_collection():
@@ -24,8 +17,10 @@ def get_data_collection():
 # donguk/datafile 폴더를 업로드 폴더로 지정
 # 현재 파일(__init__.py)의 위치: donguk/datainsert/
 # 상위 디렉토리(donguk)로 올라간 뒤 datafile 폴더 지정
-UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), '..', 'datafile')
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), '..','..', 'datafile')
+THUMBNAIL_FOLDER = os.path.join(os.path.dirname(__file__),'..','..','jinwoo/category/static/images/dataset-thumbnail')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(THUMBNAIL_FOLDER, exist_ok=True)
 
 # 데이터 등록 페이지
 @datainsert_blueprint.route("/", methods=["GET"])
@@ -43,29 +38,39 @@ def submit_data():
     main_category = request.form.get("main-category")
     sub_category = request.form.get("sub-category")
     description = request.form.get("description")
-    files = request.files.getlist("files[]")  # 여러 파일 업로드
+    file = request.files['file']  # 여러 파일 업로드
+    thumbnail = request.files['thumbnail']
 
     # 데이터 유효성 확인
-    if not title or not price or not main_category or not sub_category or not description:
+    if not title or not price or not main_category or not sub_category or not description or not thumbnail:
         return jsonify({"success": False, "message": "모든 필드를 입력해주세요!"}), 400
+
+    # 파일 이름에 UUID 추가
+    dataset_unique_filename = f"{uuid.uuid4()}_{file.filename}"
+    dataset_file_path = os.path.join(UPLOAD_FOLDER, dataset_unique_filename)
     
-    file_data = []
-    for file in files:
-        # 파일명 안전하게 처리
-        filename = file.filename  # secure_filename 사용 X
-        # donguk/datafile 경로에 파일 저장
-        save_path = os.path.join(UPLOAD_FOLDER, filename)
-        file.save(save_path)
+    # 파일 이름에 UUID 추가
+    thumbnail_unique_filename = f"{uuid.uuid4()}_{thumbnail.filename}"
+    thumbnail_file_path = os.path.join(THUMBNAIL_FOLDER, thumbnail_unique_filename)
+    
+    # MongoDB에 파일 경로 저장
+    dataset_file_data = {
+        "original_name": file.filename,
+        "stored_name": dataset_unique_filename,
+    }
+    
+    # MongoDB에 썸네일 경로 저장
+    thumbnail_file_data = {
+        "original_name": thumbnail.filename,
+        "stored_name": thumbnail_unique_filename,
+    }
 
-        # DB 저장용 바이너리 변환 전, 스트림 위치를 다시 앞으로
-        file.stream.seek(0)
-        binary_file = Binary(file.read())
-
-        file_data.append({
-            "filename": filename,
-            "content": binary_file,
-            "content_type": file.content_type
-        })
+    # 파일 저장
+    file.save(dataset_file_path)
+    thumbnail.save(thumbnail_file_path)
+    
+    # 시간 저장
+    upload_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # MongoDB에 데이터 저장
     new_data = {
@@ -74,6 +79,9 @@ def submit_data():
         "main_category": main_category,
         "sub_category": sub_category,
         "description": description,
+        "file_info": dataset_file_data,
+        "thumbnail_info": thumbnail_file_data,
+        "upload_time": upload_time
     }
     data_collection.insert_one(new_data)
 

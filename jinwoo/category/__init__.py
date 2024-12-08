@@ -68,9 +68,9 @@ def api_get_categories_paginated():
 # 특정 카테고리의 데이터셋 목록 API (페이지네이션 적용)
 @categorySearch_blueprint.route('/api/datasets', methods=['GET'])
 def api_get_datasets():
-    category_id = request.args.get('category_id')
-    if not category_id:
-        return jsonify({"error": "category_id is required"}), 400
+    main_category = request.args.get('main_category')
+    if not main_category:
+        return jsonify({"error": "main_category is required"}), 400
 
     try:
         page = int(request.args.get('page', 1))
@@ -79,7 +79,7 @@ def api_get_datasets():
         return jsonify({"error": "page and items_per_page must be integers"}), 400
 
     # MongoDB에서 해당 카테고리의 데이터셋 가져오기
-    datasets = list(db.datasets.find({"category_id": category_id}, {"_id": 0}))
+    datasets = list(db.datasets.find({"main_category": main_category}, {"_id": 0}))
     total_items = len(datasets)
 
     # 페이지 범위 조정
@@ -95,12 +95,12 @@ def api_get_datasets():
     })
 
 # 특정 카테고리의 선택 및 확장 API
-@categorySearch_blueprint.route('/api/categories/<category_id>/expand', methods=['GET'])
-def get_expanded_categories(category_id):
+@categorySearch_blueprint.route('/api/categories/<main_category>/expand', methods=['GET'])
+def get_expanded_categories(main_category):
     categories = list(db.categories.find({}, {"_id": 0}))
     
     # 선택된 카테고리의 인덱스 찾기
-    selected_index = next((index for (index, d) in enumerate(categories) if d["id"] == category_id), None)
+    selected_index = next((index for (index, d) in enumerate(categories) if d["name"] == main_category), None)
     if selected_index is None:
         return jsonify({"error": "Category not found"}), 404
 

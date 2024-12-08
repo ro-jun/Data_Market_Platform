@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const cardElement = document.createElement('div');
             cardElement.className = 'product-card';
             cardElement.setAttribute('data-category-id', category.id);
-            cardElement.onclick = () => showFilterAndExpandCard(category.id, 1);
+            cardElement.onclick = () => showFilterAndExpandCard(category.name, 1);
 
             cardElement.innerHTML = `
                 <img src="static/category/images/icon/big-category/${category.id}.png" alt="${category.name}" class="product-image" style="width:100px; height:100px;">
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     `;
 
                     // 카드 클릭 시 동일한 함수 호출
-                    cardElement.onclick = () => showFilterAndExpandCard(category.id, 1);
+                    cardElement.onclick = () => showFilterAndExpandCard(category.name, 1);
 
                     selectedProductsContainer.appendChild(cardElement);
                 });
@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 데이터셋 페이지 로드 함수
     function loadDatasetPage(page) {
-        fetch(`/category/api/datasets?category_id=${selectedCategoryId}&page=${page}&items_per_page=${itemsPerPage.dataset}`)
+        fetch(`/category/api/datasets?main_category=${selectedCategoryId}&page=${page}&items_per_page=${itemsPerPage.dataset}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -201,24 +201,44 @@ document.addEventListener("DOMContentLoaded", function () {
     // 데이터셋 카드 생성 함수
     function createDatasetCard(dataset) {
         const div = document.createElement('div');
+        const thumbnail = dataset.thumbnail_info?.stored_name; // thumbnail_info 또는 stored_name이 없으면 undefined
+        const imageUrl = thumbnail ? `static/category/images/dataset-thumbnail/${thumbnail}` : null; // 기본값을 null 또는 다른 처리로 설정
         div.classList.add('dataset-card');
-        div.innerHTML = `
-            <img src="${dataset.image_url}" alt="${dataset.title}" class="dataset-image" style="width:100px; height:100px;">
+        
+        if(imageUrl){
+            div.innerHTML = `
+            <img class="dataset-thumbnail" src="static/category/images/dataset-thumbnail/${dataset.thumbnail_info.stored_name}" alt="${dataset.title}" class="dataset-image" style="width:100px; height:100px;">
             <div class="dataset-info">
                 <h5>${dataset.title}</h5>
                 <p>${dataset.description}</p>
                 <div class="dataset-meta" style='font-size: 0.65rem;'>
-                    <span>📄 ${dataset.fileType}</span> · 
                     <span>💰 ${dataset.price}</span> · 
-                    <span>⌛️ ${dataset.time}</span>
+                    <span>📄 ${dataset.sub_category}</span>
+                    <span>⌛️ ${dataset.upload_time}</span>
                 </div>
             </div>
         `;
+        }else{
+            div.innerHTML = `
+            <div class="dataset-info">
+                <h5>${dataset.title}</h5>
+                <p>${dataset.description}</p>
+                <div class="dataset-meta" style='font-size: 0.65rem;'>
+                    <span>💰 ${dataset.price}</span> · 
+                    <span>📄 ${dataset.sub_category}</span>
+                    <span>⌛️ ${dataset.upload_time}</span>
+                </div>
+            </div>
+        `;
+        }
+        
         div.onclick = () => {
             location.href = `/category/detail/${selectedCategoryId}`;
         };
         return div;
     }
+
+
 
     // 필터 적용 및 초기화 함수 (추가 구현 필요)
     function applyFilters() {

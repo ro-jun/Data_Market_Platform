@@ -223,6 +223,15 @@
 .dataset-card .dataset-info {
     flex: 1;
 }
+/* 썸네일 */
+.dataset-thumbnail {
+    width: 100px;       /* 고정된 너비 */
+    height: 100px;      /* 고정된 높이 */
+    object-fit: cover;  /* 이미지를 영역에 맞게 잘라냄 */
+    border-radius: 5px; /* 선택적으로 모서리를 둥글게 */
+    border: 1px solid #ccc; /* 선택적으로 테두리 추가 */
+}
+
 
 /* pagination 설정 */
 .pagination {

@@ -188,3 +188,21 @@ button:hover {
     color: #555;
     font-size: 14px;
 }
+
+/* 썸네일 미리보기 스타일 */
+.thumbnail-preview {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.thumbnail-preview img {
+    max-width: 700px;
+    max-height: 600px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 4px;
+}

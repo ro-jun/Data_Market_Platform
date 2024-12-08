@@ -41,16 +41,40 @@
                     <label for="sub-category">세부 분류</label>
                     <select id="sub-category" name="sub-category" required>
                         <option value="">세부 분류 선택</option>
+                        <option value="경영/경제">경영/경제</option>
+                        <option value="공학/기술">공학/기술</option>
+                        <option value="교육학">교육학</option>
+                        <option value="농수산학">농수산학</option>
+                        <option value="특허감/창작">특허감/창작</option>
+                        <option value="법학">법학</option>
+                        <option value="사회과학">사회과학</option>
+                        <option value="생활/환경">생활/환경</option>
+                        <option value="예체능">예체능</option>
+                        <option value="의/약학">의/약학</option>
+                        <option value="인문/어학">인문/어학</option>
+                        <option value="자연과학">자연과학</option>
+                        <option value="창업">창업</option></select>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="description">설명</label>
                     <textarea id="description" name="description" rows="4" required></textarea>
                 </div>
+                
+                <!-- 썸네일 업로드 섹션 -->
+                <div class="form-group">
+                    <label for="thumbnail">썸네일 업로드 (jpg, png)</label>
+                    <div id="thumbnail-dropzone" class="dropzone">
+                        <p>+ 썸네일 추가</p>
+                        <input type="file" name="thumbnail" id="thumbnail" class="file-input-hidden" accept="image/jpeg, image/jpg, image/png">
+                    </div>
+                    <div id="thumbnail-preview" class="thumbnail-preview"></div>
+                </div>
+
                 <div class="file-upload-section">
                     <div id="dropzone" class="dropzone">
                         <p>+ 추가 파일</p>
-                        <input type="file" name="files[]" id="files" class="file-input-hidden" multiple>
+                        <input type="file" name="file" id="files" class="file-input-hidden">
                     </div>
                     <ul id="file-list"></ul>
                 </div>

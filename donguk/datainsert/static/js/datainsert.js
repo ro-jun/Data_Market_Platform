@@ -87,4 +87,35 @@ document.addEventListener('DOMContentLoaded', () => {
         form.reset();
         fileList.innerHTML = '';
     });
+
+    // 썸네일 업로드 처리
+    const thumbnailDropzone = document.getElementById('thumbnail-dropzone');
+    const thumbnailInput = document.getElementById('thumbnail');
+    const thumbnailPreview = document.getElementById('thumbnail-preview');
+
+    thumbnailDropzone.addEventListener('click', () => thumbnailInput.click());
+
+    thumbnailInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        thumbnailPreview.innerHTML = '';
+
+        if (file) {
+            const fileType = file.type;
+            const validImageTypes = ['image/jpeg', 'image/png'];
+
+            if (!validImageTypes.includes(fileType)) {
+                alert('썸네일은 jpg 또는 png 파일만 업로드할 수 있습니다.');
+                thumbnailInput.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                thumbnailPreview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 });
