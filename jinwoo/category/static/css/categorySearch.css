@@ -305,7 +305,7 @@
 
 /* 개별 그리드 아이템 지정 */
 .grid-item {
-    padding: 15px;
+    padding: 10px 0;
     box-sizing: border-box;
 }
 
@@ -326,13 +326,126 @@
     grid-row: 2 / 3; /* 2행 */
 }
 
-/* 2열 3행 - pagination */
+/* 2열 3행 - category-section */
 .grid-item-2-3 {
     grid-column: 2 / 3; /* 2열 */
     grid-row: 3 / 4; /* 3행 */
 }
 
+/* 2열 4행 - dataset-list */
+.grid-item-2-4 {
+    grid-column: 2 / 3; /* 2열 */
+    grid-row: 4 / 5; /* 3행 */
+}
+
 .pagination button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+#category-container {
+    display: flex;
+    gap: 20px;
+}
+
+#sub-category-section, #detailed-category-section {
+    width: 50%;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin: 10px 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+li img {
+    width: 24px;
+    height: 24px;
+}
+
+/* #subCategoryList 컨테이너 스타일 */
+#subCategoryList {
+    display: none;
+    flex-direction: row; /* 가로로 섹션 배치 */
+    gap: 10px; /* 섹션 간 간격 */
+    height: 200px; /* 세로 고정 */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden; /* 내부 스크롤 방지 */
+}
+
+/* 각 섹션 스타일 */
+.category-section {
+    flex: 1; /* 동일한 비율로 배분 */
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* 세로 스크롤 가능 */
+    border-left: 1px solid #ddd;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.category-section:first-child {
+    border-left: none; /* 첫 번째 섹션에는 좌측 테두리 제거 */
+}
+
+/* 리스트 스타일 */
+.category-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* 리스트 항목 스타일 */
+.category-item {
+    padding: 8px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s, padding-left 0.3s;
+}
+
+/* 리스트 항목 호버 효과 */
+.category-item:hover {
+    background-color: #e0e0e0;
+    padding-left: 10px;
+}
+
+/* 선택된 리스트 항목 스타일 */
+.category-item.selected {
+    background-color: #007bff;
+    color: white;
+    padding-left: 10px;
+}
+
+/* 서브 카테고리 없음 메시지 스타일 */
+#subCategoryList .no-result {
+    padding: 10px;
+    background-color: #ffeeba;
+    border: 1px solid #ffdf7e;
+    border-radius: 4px;
+    color: #856404;
+    cursor: default;
+}
+
+/* 자식 컨테이너 스타일 */
+.detailed-icon-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 이미지 스타일 */
+.detailed-icon {
+    width: 170px; /* 이미지 너비 */
+    height: 170px; /* 이미지 높이 */
+    object-fit: cover; /* 비율 유지하며 자르기 */
+    border-radius: 4px;
 }

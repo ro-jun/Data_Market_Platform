@@ -5,6 +5,7 @@ import io
 import os
 from werkzeug.utils import secure_filename
 import uuid
+from openai import OpenAI
 from datetime import datetime
 
 # Blueprint 생성
@@ -14,6 +15,40 @@ datainsert_blueprint = Blueprint("datainsert", __name__, template_folder="templa
 def get_data_collection():
     return current_app.config['MONGO_DB'].datasets
 
+client = OpenAI(
+    api_key = os.getenv('OPENAI_API_KEY'),
+)
+
+
+def determine_detailed_category(title, main_category, sub_category):
+    """
+    OpenAI GPT 모델을 사용하여 세부 분류를 결정합니다.
+    짧은 단어로 표현하도록 프롬프트를 설정합니다.
+    """
+    prompt = f"""
+    Based on the following information, determine the most detailed category as a single short word(10 characters or less):
+    - Title: {title}
+    - Main Category: {main_category}
+    - Sub Category: {sub_category}
+    
+    Provide only the category name without any additional text.
+    """
+    
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",  # 필요에 따라 모델 이름 변경
+            messages=[
+                {"role": "system", "content": "You are an expert classifier for detailed subcategories."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.3  # 낮은 온도로 일관된 응답 유도
+        )
+        detailed_category = response.choices[0].message.content.strip()
+        return detailed_category
+    except Exception as e:
+        print(f"Error calling OpenAI API: {e}")
+        return None
+    
 # donguk/datafile 폴더를 업로드 폴더로 지정
 # 현재 파일(__init__.py)의 위치: donguk/datainsert/
 # 상위 디렉토리(donguk)로 올라간 뒤 datafile 폴더 지정
@@ -71,6 +106,11 @@ def submit_data():
     
     # 시간 저장
     upload_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    # detailed_category 결정
+    detailed_category = determine_detailed_category(title, main_category, sub_category)
+    if not detailed_category:
+        return jsonify({"success": False, "message": "세부 분류를 결정할 수 없습니다."}), 500
 
     # MongoDB에 데이터 저장
     new_data = {
@@ -78,10 +118,11 @@ def submit_data():
         "price": price,
         "main_category": main_category,
         "sub_category": sub_category,
+        "detailed_category": detailed_category,
         "description": description,
         "file_info": dataset_file_data,
         "thumbnail_info": thumbnail_file_data,
-        "upload_time": upload_time
+        "upload_time": upload_time,
     }
     data_collection.insert_one(new_data)
 

@@ -1,45 +1,64 @@
-document.addEventListener("DOMContentLoaded", function () {
-    let currentProductPage = 1;
-    let currentDatasetPage = 1;
-    const itemsPerPage = { product: 5, dataset: 6 };
-    let currentMode = 'product'; // 'product' 또는 'dataset'
-    let selectedCategoryId = null;
-    let allCategories = []; // 모든 카테고리를 저장
+document.addEventListener("DOMContentLoaded", () => {
+    // 상태 관리 객체
+    const state = {
+        currentProductPage: 1,
+        currentDatasetPage: 1,
+        itemsPerPage: { product: 5, dataset: 6 },
+        currentMode: 'product', // 'product' 또는 'dataset'
+        selectedCategoryId: null,
+        allCategories: [],
+    };
 
-    // 페이지네이션 요소
+    // DOM 요소 캐싱
     const paginationSpan = document.querySelector('.pagination span');
     const previousButton = document.querySelector('.pagination button:first-child');
     const nextButton = document.querySelector('.pagination button:last-child');
-
-    // 카테고리 선택 요소
     const categorySelect = document.getElementById('categorySelect');
     const selectedProductsContainer = document.getElementById('selected-products-container');
     const datasetListContainer = document.getElementById('dataset-list-container');
+    const filterSection = document.getElementById('filter-section');
+    const searchInput = document.getElementById('searchInput');
 
     // 초기 데이터 로드
-    fetchCategories(currentProductPage);
+    initialize();
+
+    // 초기화 함수
+    async function initialize() {
+        try {
+            await fetchCategories(state.currentProductPage);
+            addEventListeners();
+        } catch (error) {
+            // console.error('Initialization error:', error);
+        }
+    }
+
+    // 공통 fetch 함수
+    async function fetchData(url) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            return await response.json();
+        } catch (error) {
+            console.error(`Error fetching data from ${url}:`, error);
+            throw error;
+        }
+    }
 
     // 카테고리 로드 함수
-    function fetchCategories(page = 1) {
-        fetch(`/category/api/categories?page=${page}&items_per_page=${itemsPerPage.product}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(categories => {
-                if (page === 1) {
-                    allCategories = categories; // 첫 페이지 로드 시 전체 카테고리 저장
-                } else {
-                    allCategories = allCategories.concat(categories); // 추가 페이지 로드 시 누적
-                }
-                populateProductCards(categories);
-                populateCategorySelect(categories);
-                const hasNext = categories.length === itemsPerPage.product;
-                renderPaginationUI(page, hasNext);
-            })
-            .catch(error => console.error('Error fetching product categories:', error));
+    async function fetchCategories(page = 1) {
+        const url = `/category/api/categories?page=${page}&items_per_page=${state.itemsPerPage.product}`;
+        const categories = await fetchData(url);
+
+        if (page === 1) {
+            state.allCategories = categories;
+        } else {
+            state.allCategories = [...state.allCategories, ...categories];
+        }
+
+        populateProductCards(categories);
+        populateCategorySelect(categories);
+        const hasNext = categories.length === state.itemsPerPage.product;
+        renderPaginationUI(page, hasNext);
     }
 
     // 카테고리 선택 요소에 옵션 추가
@@ -53,253 +72,377 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // 제품 카드 템플릿 함수
+    function createProductCard(category) {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.dataset.categoryId = category.id;
+        card.addEventListener('click', () => showFilterAndExpandCard(category.name, 1));
+
+        card.innerHTML = `
+            <img src="static/category/images/icon/big-category/${category.id}.png" alt="${category.name}" class="product-image" style="width:100px; height:100px;">
+            <div class="product-info">
+                <h3>${category.name}</h3>
+            </div>
+        `;
+
+        return card;
+    }
+
     // 제품 카드 렌더링 함수
     function populateProductCards(categories) {
-        selectedProductsContainer.innerHTML = ''; // 기존 카드 초기화
-
+        selectedProductsContainer.innerHTML = '';
         categories.forEach(category => {
-            const cardElement = document.createElement('div');
-            cardElement.className = 'product-card';
-            cardElement.setAttribute('data-category-id', category.id);
-            cardElement.onclick = () => showFilterAndExpandCard(category.name, 1);
-
-            cardElement.innerHTML = `
-                <img src="static/category/images/icon/big-category/${category.id}.png" alt="${category.name}" class="product-image" style="width:100px; height:100px;">
-                <div class="product-info">
-                    <h3>${category.name}</h3>
-                </div>
-            `;
-
-            selectedProductsContainer.appendChild(cardElement);
+            const card = createProductCard(category);
+            selectedProductsContainer.appendChild(card);
         });
     }
 
-    // 페이지네이션 렌더링 함수
+    // 페이지네이션 UI 렌더링 함수
     function renderPaginationUI(current, hasNext) {
         paginationSpan.textContent = `페이지 ${current}`;
-
-        // 이전 버튼 활성화 여부
-        previousButton.disabled = (current === 1);
-
-        // 다음 버튼 활성화 여부
+        previousButton.disabled = current === 1;
         nextButton.disabled = !hasNext;
     }
 
-    // 페이지네이션 버튼 클릭 이벤트
-    previousButton.addEventListener('click', previousPage);
-    nextButton.addEventListener('click', nextPage);
+    // 페이지네이션 버튼 이벤트 리스너 추가
+    function addEventListeners() {
+        previousButton.addEventListener('click', handlePreviousPage);
+        nextButton.addEventListener('click', handleNextPage);
+        categorySelect.addEventListener('change', handleCategoryChange);
+        document.getElementById('applyFilterButton').addEventListener('click', applyFilters);
+        document.getElementById('resetFilterButton').addEventListener('click', resetFilters);
+        document.getElementById('searchButton').addEventListener('click', performSearch);
+        document.getElementById('backButton').addEventListener('click', goBack);
+    }
 
-    // 이전 페이지 함수
-    function previousPage() {
-        if (currentMode === 'product' && currentProductPage > 1) {
-            currentProductPage--;
-            fetchCategories(currentProductPage);
-        } else if (currentMode === 'dataset' && currentDatasetPage > 1) {
-            currentDatasetPage--;
-            loadDatasetPage(currentDatasetPage);
+    // 이전 페이지 핸들러
+    function handlePreviousPage() {
+        if (state.currentMode === 'product' && state.currentProductPage > 1) {
+            state.currentProductPage--;
+            fetchCategories(state.currentProductPage);
+        } else if (state.currentMode === 'dataset' && state.currentDatasetPage > 1) {
+            state.currentDatasetPage--;
+            loadDatasetPage(state.currentDatasetPage);
         }
     }
 
-    // 다음 페이지 함수
-    function nextPage() {
-        if (currentMode === 'product') {
-            currentProductPage++;
-            fetchCategories(currentProductPage);
-        } else if (currentMode === 'dataset') {
-            currentDatasetPage++;
-            loadDatasetPage(currentDatasetPage);
+    // 다음 페이지 핸들러
+    function handleNextPage() {
+        if (state.currentMode === 'product') {
+            state.currentProductPage++;
+            fetchCategories(state.currentProductPage);
+        } else if (state.currentMode === 'dataset') {
+            state.currentDatasetPage++;
+            loadDatasetPage(state.currentDatasetPage);
+        }
+    }
+
+    // 카테고리 변경 핸들러
+    function handleCategoryChange() {
+        const selectedCategory = categorySelect.value;
+        if (selectedCategory) {
+            showFilterAndExpandCard(selectedCategory, 1);
         }
     }
 
     // 카테고리 카드 클릭 시 호출되는 함수
-    function showFilterAndExpandCard(categoryId, page = 1) {
-        selectedCategoryId = categoryId;
-        currentMode = 'dataset';
-        currentDatasetPage = page;
-        console.log(selectedCategoryId)
+    async function showFilterAndExpandCard(categoryId, page = 1) {
+        try {
+            state.selectedCategoryId = categoryId;
+            state.currentMode = 'dataset';
+            state.currentDatasetPage = page;
+            console.log(categoryId)
 
-        // 필터 섹션 보이기
-        const filterSection = document.getElementById('filter-section');
-        filterSection.style.display = 'block';
+            // 필터 섹션 보이기
+            filterSection.style.display = 'block';
 
-        // 모든 product-card를 숨기기
-        const allProductCards = document.querySelectorAll('.product-card');
-        allProductCards.forEach(card => card.style.display = 'none');
+            // 모든 product-card를 숨기기
+            toggleProductCardsVisibility(false);
 
-        // 선택된 카테고리와 다음 3개 카테고리 표시
-        fetch(`/category/api/categories/${categoryId}/expand`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
+            // 확장된 카테고리 데이터 가져오기
+            const url = `/category/api/categories/${categoryId}/expand`;
+            const data = await fetchData(url);
+            const categoriesToShow = data.categories;
+
+            // 'name'이 'categoryId'와 일치하는 카테고리 찾기
+            const subCategory = categoriesToShow.find(cat => cat.name === categoryId);
+            console.log(subCategory.sub_category)
+
+            // 선택된 카테고리와 추가 카테고리 표시
+            selectedProductsContainer.innerHTML = '';
+            categoriesToShow.forEach((category, index) => {
+                const card = createProductCard(category);
+
+                if (index === 0) {
+                    card.classList.add('selected-product-card');
+                    card.style.gridColumn = 'span 2';
+                    card.style.border = '3px solid #007bff';
                 }
-                return response.json(); // JSON 데이터 반환
-            })
-            .then(data => {
-                const cardsToShow = data.categories; // 선택된 카드와 추가 카드 리스트
-                selectedProductsContainer.innerHTML = ''; // 기존 카드 초기화
 
-                cardsToShow.forEach((category, index) => {
-                    const cardElement = document.createElement('div');
-                    cardElement.className = 'product-card';
+                selectedProductsContainer.appendChild(card);
+            });
 
-                    // 첫 번째 카드(선택된 카드)는 가로로 2열을 차지
-                    if (index === 0) {
-                        cardElement.classList.add('selected-product-card');
-                        cardElement.style.gridColumn = 'span 2';
-                        cardElement.style.border = '3px solid #007bff';
-                    }
+            // 서브 카테고리 카드 생성 및 표시
+            displaySubCategories(subCategory ? subCategory.sub_category : []);
 
-                    cardElement.innerHTML = `
-                        <img src="static/category/images/icon/big-category/${category.id}.png" alt="${category.name}" class="product-image" style="width:100px; height:100px;">
-                        <div class="product-info">
-                            <h3>${category.name}</h3>
-                        </div>
-                    `;
+            // 상세 데이터셋 목록 표시
+            await loadDatasetPage(1);
+        } catch (error) {
+            console.error("Error in showFilterAndExpandCard:", error);
+        }
+    }
 
-                    // 카드 클릭 시 동일한 함수 호출
-                    cardElement.onclick = () => showFilterAndExpandCard(category.name, 1);
+    function displaySubCategories(subCategories) {
+        const subCategoryList = document.getElementById('subCategoryList');
+        
+        subCategoryList.style.display = 'flex';
 
-                    selectedProductsContainer.appendChild(cardElement);
+        if (!subCategoryList) {
+            console.error("subCategoryList 요소를 찾을 수 없습니다.");
+            return;
+        }
+    
+        // 기존 내용 초기화
+        subCategoryList.innerHTML = '';
+    
+        // sub, detailed, detailed-icon 섹션 생성
+        const subSection = document.createElement('div');
+        subSection.id = 'subSection';
+        subSection.classList.add('category-section');
+
+    
+        const detailedSection = document.createElement('div');
+        detailedSection.id = 'detailedSection';
+        detailedSection.classList.add('category-section');
+        detailedSection.style.display = 'none'; // 기본적으로 숨김
+    
+        const detailedIconSection = document.createElement('div');
+        detailedIconSection.id = 'detailedIconSection';
+        detailedIconSection.classList.add('category-section');
+        detailedIconSection.style.display = 'none'; // 기본적으로 숨김
+    
+        // 서브 카테고리 절반만 표시
+        const halfLength = Math.ceil(subCategories.length / 2);
+        const limitedSubCategories = subCategories.slice(0, halfLength);
+    
+        // 서브 카테고리 리스트 생성
+        const subList = document.createElement('ul');
+        subList.classList.add('category-list');
+    
+        limitedSubCategories.forEach(subCat => {
+            const li = document.createElement('li');
+            li.textContent = subCat;
+            li.classList.add('category-item');
+    
+            // 클릭 시 detailed 섹션 표시
+            li.addEventListener('click', () => {
+                // 선택된 항목 하이라이트
+                const allItems = subList.querySelectorAll('.category-item');
+                allItems.forEach(item => item.classList.remove('selected'));
+                li.classList.add('selected');
+    
+                // detailed 섹션 표시
+                detailedSection.style.display = 'block';
+                detailedIconSection.style.display = 'none';
+                displayDetailedCategory(subCat);
+            });
+    
+            subList.appendChild(li);
+        });
+    
+        subSection.appendChild(subList);
+    
+        // detailed 카테고리 리스트 (내용 없음)
+        const detailedList = document.createElement('ul');
+        detailedList.classList.add('category-list');
+        detailedSection.appendChild(detailedList);
+    
+        // detailed-icon 리스트 (이미지 표시)
+        const detailedIconList = document.createElement('div');
+        detailedIconList.classList.add('detailed-icon-list');
+        detailedIconSection.appendChild(detailedIconList);
+    
+        // detailed 카테고리 클릭 시 detailed-icon 표시
+        function displayDetailedCategory(selectedSubCat) {
+            // detailed 섹션 내용 초기화
+            detailedList.innerHTML = '';
+    
+            // 예시로 상세 카테고리 항목 생성 (실제 데이터에 맞게 수정)
+            const exampleDetails = ['상세1', '상세2', '상세3'];
+    
+            exampleDetails.forEach(detail => {
+                const li = document.createElement('li');
+                li.textContent = detail;
+                li.classList.add('category-item');
+    
+                li.addEventListener('click', () => {
+                    // 선택된 항목 하이라이트
+                    const allDetails = detailedList.querySelectorAll('.category-item');
+                    allDetails.forEach(item => item.classList.remove('selected'));
+                    li.classList.add('selected');
+    
+                    // detailed-icon 섹션 표시
+                    detailedIconSection.style.display = 'block';
+                    displayDetailedIcon(detail);
                 });
+    
+                detailedList.appendChild(li);
+            });
+        }
+    
+        // detailed-icon 클릭 시 색상 변경 없이 이미지 표시
+        function displayDetailedIcon(selectedDetail) {
+            // detailed-icon 섹션 내용 초기화
+            detailedIconList.innerHTML = '';
 
-                // 상세 데이터셋 목록 표시
-                loadDatasetPage(1);
-            })
-            .catch(error => console.error("Error fetching expanded category data:", error));
+            const iconUrl = '/category/static/category/images/icon/small-category/detailed_dummy.svg'
+            const img = document.createElement('img');
+            img.src = iconUrl;
+            img.alt = 'Detailed Icon';
+            img.classList.add('detailed-icon');
+
+            detailedIconList.appendChild(img);
+
+            }
+
+            // 섹션들을 subCategoryList에 추가
+            subCategoryList.appendChild(subSection);
+            subCategoryList.appendChild(detailedSection);
+            subCategoryList.appendChild(detailedIconSection);
+    }
+
+    // 제품 카드의 가시성 토글 함수
+    function toggleProductCardsVisibility(visible) {
+        const allProductCards = document.querySelectorAll('.product-card');
+        allProductCards.forEach(card => {
+            card.style.display = visible ? 'block' : 'none';
+        });
     }
 
     // 데이터셋 페이지 로드 함수
-    function loadDatasetPage(page) {
-        fetch(`/category/api/datasets?main_category=${selectedCategoryId}&page=${page}&items_per_page=${itemsPerPage.dataset}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                const datasets = data.datasets;
-                datasetListContainer.innerHTML = '';
-                console.log(data)
+    async function loadDatasetPage(page) {
+        try {
+            const url = `/category/api/datasets?main_category=${state.selectedCategoryId}&page=${page}&items_per_page=${state.itemsPerPage.dataset}`;
+            const data = await fetchData(url);
+            const datasets = data.datasets;
 
-                if (datasets.length > 0) {
-                    datasets.forEach(dataset => {
-                        const datasetElement = createDatasetCard(dataset);
-                        datasetListContainer.appendChild(datasetElement);
-                    });
+            datasetListContainer.innerHTML = '';
 
-                    const hasNext = datasets.length === itemsPerPage.dataset;
-                    renderPaginationUI(page, hasNext);
-                } else {
-                    datasetListContainer.innerHTML = "<p>해당 카테고리에 데이터셋이 없습니다.</p>";
-                    renderPaginationUI(page, false);
-                }
-            })
-            .catch(error => console.error("Error fetching datasets:", error));
+            if (datasets.length > 0) {
+                datasets.forEach(dataset => {
+                    const datasetElement = createDatasetCard(dataset);
+                    datasetListContainer.appendChild(datasetElement);
+                });
+
+                const hasNext = datasets.length === state.itemsPerPage.dataset;
+                renderPaginationUI(page, hasNext);
+            } else {
+                datasetListContainer.innerHTML = "<p>해당 카테고리에 데이터셋이 없습니다.</p>";
+                renderPaginationUI(page, false);
+            }
+        } catch (error) {
+            console.error("Error fetching datasets:", error);
+        }
     }
 
-    // 데이터셋 카드 생성 함수
+    // 데이터셋 카드 템플릿 함수
     function createDatasetCard(dataset) {
         const div = document.createElement('div');
-        const thumbnail = dataset.thumbnail_info?.stored_name; // thumbnail_info 또는 stored_name이 없으면 undefined
-        const imageUrl = thumbnail ? `static/category/images/dataset-thumbnail/${thumbnail}` : null; // 기본값을 null 또는 다른 처리로 설정
         div.classList.add('dataset-card');
-        
-        if(imageUrl){
+
+        const thumbnail = dataset.thumbnail_info?.stored_name;
+        const imageUrl = thumbnail ? `static/category/images/dataset-thumbnail/${thumbnail}` : null;
+
+        if (imageUrl) {
             div.innerHTML = `
-            <img class="dataset-thumbnail" src="static/category/images/dataset-thumbnail/${dataset.thumbnail_info.stored_name}" alt="${dataset.title}" class="dataset-image" style="width:100px; height:100px;">
-            <div class="dataset-info">
-                <h5>${dataset.title}</h5>
-                <p>${dataset.description}</p>
-                <div class="dataset-meta" style='font-size: 0.65rem;'>
-                    <span>💰 ${dataset.price}</span> · 
-                    <span>📄 ${dataset.sub_category}</span>
-                    <span>⌛️ ${dataset.upload_time}</span>
+                <img class="dataset-thumbnail" src="${imageUrl}" alt="${dataset.title}" style="width:100px; height:100px;">
+                <div class="dataset-info">
+                    <h5>${dataset.title}</h5>
+                    <p>${dataset.description}</p>
+                    <div class="dataset-meta" style='font-size: 0.65rem;'>
+                        <span>💰 ${dataset.price}</span> · 
+                        <span>📄 ${dataset.sub_category} - ${dataset.detailed_category}</span>
+                        <span>⌛️ ${dataset.upload_time}</span>
+                    </div>
                 </div>
-            </div>
-        `;
-        }else{
+            `;
+        } else {
             div.innerHTML = `
-            <div class="dataset-info">
-                <h5>${dataset.title}</h5>
-                <p>${dataset.description}</p>
-                <div class="dataset-meta" style='font-size: 0.65rem;'>
-                    <span>💰 ${dataset.price}</span> · 
-                    <span>📄 ${dataset.sub_category}</span>
-                    <span>⌛️ ${dataset.upload_time}</span>
+                <div class="dataset-info">
+                    <h5>${dataset.title}</h5>
+                    <p>${dataset.description}</p>
+                    <div class="dataset-meta" style='font-size: 0.65rem;'>
+                        <span>💰 ${dataset.price}</span> · 
+                        <span>📄 ${dataset.sub_category}</span>
+                        <span>⌛️ ${dataset.upload_time}</span>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
         }
-        
-        div.onclick = () => {
-            location.href = `/category/detail/${selectedCategoryId}`;
-        };
+
+        div.addEventListener('click', () => {
+            window.location.href = `/category/detail/${state.selectedCategoryId}`;
+        });
+
         return div;
     }
 
-
-
-    // 필터 적용 및 초기화 함수 (추가 구현 필요)
+    // 필터 적용 함수
     function applyFilters() {
         // 필터링 로직 구현
         alert('필터가 적용되었습니다.');
     }
 
+    // 필터 초기화 함수
     function resetFilters() {
         // 필터 초기화 로직 구현
         alert('필터가 초기화되었습니다.');
     }
 
-    // 검색 수행 함수 (추가 구현 필요)
-    function performSearch() {
-        const searchQuery = document.getElementById('searchInput').value.trim();
-        const selectedCategory = categorySelect.value;
+    // 검색 수행 함수
+    async function performSearch() {
+        try {
+            const searchQuery = searchInput.value.trim();
+            const selectedCategory = categorySelect.value;
 
-        if (!searchQuery && !selectedCategory) {
-            alert("검색어 또는 카테고리를 입력하세요!");
-            return;
-        }
+            if (!searchQuery && !selectedCategory) {
+                alert("검색어 또는 카테고리를 입력하세요!");
+                return;
+            }
 
-        let searchUrl = `/category/api/search?`;
-        if (searchQuery) {
-            searchUrl += `query=${encodeURIComponent(searchQuery)}&`;
-        }
-        if (selectedCategory) {
-            searchUrl += `category=${encodeURIComponent(selectedCategory)}`;
-        }
+            let searchUrl = `/category/api/search?`;
+            if (searchQuery) {
+                searchUrl += `query=${encodeURIComponent(searchQuery)}&`;
+            }
+            if (selectedCategory) {
+                searchUrl += `category=${encodeURIComponent(selectedCategory)}`;
+            }
 
-        fetch(searchUrl)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                // 검색 결과를 처리하고 페이지에 표시 (추가 구현 필요)
-                console.log("검색 결과:", data);
-                datasetListContainer.innerHTML = ''; // 기존 데이터 초기화
-                if (data.length > 0) {
-                    data.forEach(dataset => {
-                        const datasetElement = createDatasetCard(dataset);
-                        datasetListContainer.appendChild(datasetElement);
-                    });
-                    // 페이지네이션 필요 여부 판단
-                    const hasNext = data.length === itemsPerPage.dataset;
-                    renderPaginationUI(currentDatasetPage, hasNext);
-                } else {
-                    datasetListContainer.innerHTML = "<p>검색 결과가 없습니다.</p>";
-                    renderPaginationUI(currentDatasetPage, false);
-                }
-            })
-            .catch(error => {
-                console.error("Error performing search:", error);
-                datasetListContainer.innerHTML = "<p>검색 중 오류가 발생했습니다. 다시 시도해주세요.</p>";
-            });
+            const data = await fetchData(searchUrl);
+            const datasets = data.datasets || data; // API 응답 구조에 따라 조정
+
+            datasetListContainer.innerHTML = '';
+
+            if (datasets.length > 0) {
+                datasets.forEach(dataset => {
+                    const datasetElement = createDatasetCard(dataset);
+                    datasetListContainer.appendChild(datasetElement);
+                });
+
+                const hasNext = datasets.length === state.itemsPerPage.dataset;
+                renderPaginationUI(state.currentDatasetPage, hasNext);
+            } else {
+                datasetListContainer.innerHTML = "<p>검색 결과가 없습니다.</p>";
+                renderPaginationUI(state.currentDatasetPage, false);
+            }
+        } catch (error) {
+            console.error("Error performing search:", error);
+            datasetListContainer.innerHTML = "<p>검색 중 오류가 발생했습니다. 다시 시도해주세요.</p>";
+        }
     }
 
-    // 뒤로 가기 함수 (추가 구현 필요)
+    // 뒤로 가기 함수
     function goBack() {
         window.history.back();
     }
