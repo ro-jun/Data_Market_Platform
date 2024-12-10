@@ -8,7 +8,7 @@ openai_api_key=os.getenv("OPENAI_api_key")  # API 키
 
 # OpenAI Embeddings 설정
 embeddings = OpenAIEmbeddings(
-    model="text-embedding-3-small",
+    model="text-embedding-3-large",
     openai_api_key = openai_api_key
     )
 
