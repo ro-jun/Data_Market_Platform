@@ -13,7 +13,11 @@ conversation_history = []
 functions = [
     {
         "name": "search_similar_data",
-        "description": "사용자 요구사항 기반 유사 데이터 검색. 적절한 data_type, purpose, details를 모두 포함해야 한다.",
+        "description": (
+            "사용자 요구사항 기반 유사 데이터 검색. "
+            "data_type, purpose, details를 모두 포함해야 한다. "
+            "이 함수는 벡터 DB에서 검색한 결과를 JSON 형태로 반환한다."
+        ),
         "parameters": {
             "type": "object",
             "properties": {
@@ -36,16 +40,19 @@ functions = [
 ]
 
 def handle_user_message(user_message):
-    # 초기 대화 설정: 대화가 시작될 때(즉, conversation_history가 비어있을 때) system 메시지 추가
+    # 초기 대화 설정
     if not conversation_history:
         conversation_history.append({
-            "role": "system", 
+            "role": "system",
             "content": (
                 "당신은 데이터셋 추천을 돕는 고급 AI 어시스턴트입니다. "
-                "사용자가 원하는 데이터 타입, 목적, 세부사항을 충분히 이해한 뒤, "
-                "필요시 'search_similar_data' 함수를 호출하세요. "
-                "만약 사용자가 아직 명확하지 않다면 추가 질문을 통해 정보를 수집하십시오. "
-                "필요한 정보가 충분해지면 함수 호출을 통해 데이터셋을 추천하고, 결과를 바탕으로 최종 답변을 제공하세요."
+                "사용자가 원하는 data_type, purpose, details를 파악한 뒤 "
+                "'search_similar_data' 함수를 호출하여 벡터 DB 결과를 얻으세요. "
+                "함수 호출 전에는 충분한 정보가 없으면 추가 질문을 하세요. "
+                "함수 결과가 나오면, 그 결과(JSON)만 사용하여 답변하세요. "
+                "외부 지식 사용 금지. 결과에 없는 정보 추론 금지. "
+                "결과가 만족스럽지 않다면 '적합한 데이터가 없습니다.'라고 답하세요. "
+                "가능한 한 풍부하고 상세하게, 데이터셋 형식, 메타데이터, 활용방안 등을 설명하세요."
             )
         })
 
@@ -62,6 +69,7 @@ def handle_user_message(user_message):
 
     assistant_message = response.choices[0].message
 
+    # 함수 호출 여부 판단
     if assistant_message.function_call is not None:
         func_name = assistant_message.function_call.name
         args_str = assistant_message.function_call.arguments or "{}"
@@ -69,7 +77,6 @@ def handle_user_message(user_message):
         try:
             arguments = json.loads(args_str)
         except json.JSONDecodeError:
-            # 함수 인자 파싱 실패시 모델에게 수정 요청
             conversation_history.append({
                 "role": "system",
                 "content": "함수 인자가 올바르지 않습니다. data_type, purpose, details를 올바른 문자열로 전달해주세요."
@@ -83,13 +90,12 @@ def handle_user_message(user_message):
             assistant_message = retry_response.choices[0].message
             arguments = json.loads(assistant_message.function_call.arguments)
 
-        # 인자 유효성 체크
+        # 인자 검증
         if not arguments.get("data_type") or not arguments.get("purpose") or not arguments.get("details"):
             conversation_history.append({
                 "role": "system",
                 "content": "함수 호출 인자가 불충분합니다. data_type, purpose, details를 모두 제공해주세요."
             })
-            # 다시 재요청
             retry_response = client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=conversation_history,
@@ -99,21 +105,33 @@ def handle_user_message(user_message):
             assistant_message = retry_response.choices[0].message
             arguments = json.loads(assistant_message.function_call.arguments)
 
-        # 실제 함수 호출
+        # 함수 실행
         search_results = search_similar_data({
             "data_type": arguments["data_type"],
             "purpose": arguments["purpose"],
             "details": arguments["details"]
         })
 
-        # 함수 결과 전달 (이미 search_results는 직렬화 가능한 형태로 반환)
+        # 함수 결과 추가
         conversation_history.append({
             "role": "function",
             "name": func_name,
             "content": json.dumps(search_results)
         })
 
-        # 최종 응답 요청
+        # 함수 결과에 기반해 답변하도록 system 메시지 추가
+        conversation_history.append({
+            "role": "system",
+            "content": (
+                "위 function 메시지에서 JSON으로 된 검색 결과를 받았습니다. "
+                "이 JSON 데이터에 담긴 데이터셋 정보만 활용하여 사용자가 원하는 목적에 적합한 데이터셋을 최대한 상세히 설명하십시오. "
+                "형식, 파일 크기, 포함된 메타데이터 필드, 어떤 분석이나 활용에 유용한지 등을 구체적으로 안내하세요. "
+                "JSON 결과에 데이터셋이 없거나 만족스럽지 않다면 '적합한 데이터가 없습니다.'라고 답하세요. "
+                "외부 지식이나 추론 금지. 오직 JSON 결과 기반."
+            )
+        })
+
+        # 최종 답변 생성
         final_response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=conversation_history
@@ -122,6 +140,6 @@ def handle_user_message(user_message):
         return jsonify({"reply": final_assistant_msg})
 
     else:
-        # 함수 호출 없이 바로 답변
+        # 함수 호출 없이 바로 답변할 경우
         final_reply = assistant_message.content
         return jsonify({"reply": final_reply})

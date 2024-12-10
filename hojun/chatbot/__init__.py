@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, render_template
-from hojun.chatbot.interactive_query import handle_user_message
+from hojun.chatbot.function_call import handle_user_message
 
 # Blueprint 생성
 chatbot_blueprint = Blueprint(
