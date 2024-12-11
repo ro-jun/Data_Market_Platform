@@ -10,7 +10,9 @@ pc_api = os.getenv('PINECONE_API_KEY')
 pc = Pinecone(api_key=pc_api)
 
 # index 설정
-index_name = "test-db"
+# index_name = "test-db"
+index_name = "data-search-chatbot"
+
 
 index = pc.Index(index_name)
 print("Pinecone 설정 완료.")

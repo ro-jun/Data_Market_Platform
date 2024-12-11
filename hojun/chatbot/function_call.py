@@ -73,69 +73,84 @@ def handle_user_message(user_message):
         args_str = assistant_message.function_call.arguments or "{}"
 
         try:
+            # JSON 파싱 시도
             arguments = json.loads(args_str)
-        except json.JSONDecodeError:
-            conversation_history.append({
-                "role": "system",
-                "content": "함수 인자가 올바르지 않습니다. data_type, purpose, details를 올바른 문자열로 전달해주세요."
-            })
-            retry_response = client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=conversation_history,
-                functions=functions,
-                function_call="auto"
-            )
-            assistant_message = retry_response.choices[0].message
-            arguments = json.loads(assistant_message.function_call.arguments)
+        except json.JSONDecodeError as e:
+            print(f"JSONDecodeError: {e} | Arguments: {args_str}")
+            return jsonify({"reply": "입력된 함수 인자가 올바르지 않습니다. 관리자에게 문의하세요."}), 400
 
-        # 인자 검증
-        if not arguments.get("data_type") or not arguments.get("purpose") or not arguments.get("details"):
+       # data_type 값 검증 및 추가 질문
+        if not arguments.get("data_type"):
             conversation_history.append({
                 "role": "system",
-                "content": "함수 호출 인자가 불충분합니다. data_type, purpose, details를 모두 제공해주세요."
+                "content": (
+                    "데이터 유형(data_type)을 입력하지 않으셨습니다. 원하는 데이터의 유형을 입력해 주세요. "
+                    "예를 들어, 특정 분야(예: 금융 데이터, 스포츠 데이터, 교육 데이터)나 형식을 포함할 수 있습니다."
+                )
             })
-            retry_response = client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=conversation_history,
-                functions=functions,
-                function_call="auto"
-            )
-            assistant_message = retry_response.choices[0].message
-            arguments = json.loads(assistant_message.function_call.arguments)
+            return jsonify({"reply": "데이터 유형(data_type)을 입력해 주세요. 예: 금융 데이터, 스포츠 데이터 등."}), 400
+
+        # purpose 값 검증 및 추가 질문
+        if not arguments.get("purpose"):
+            conversation_history.append({
+                "role": "system",
+                "content": (
+                    "데이터의 사용 목적(purpose)을 입력하지 않으셨습니다. 데이터를 어떻게 활용할 계획인지 알려주세요. "
+                    "예를 들어, 분석, 시각화, 기계 학습 모델 훈련 등의 목적을 포함할 수 있습니다."
+                )
+            })
+            return jsonify({"reply": "데이터의 사용 목적(purpose)을 입력해 주세요. 예: 분석, 시각화, 기계 학습 모델 훈련 등."}), 400
+
+        # details 값 검증 및 추가 질문
+        if not arguments.get("details"):
+            conversation_history.append({
+                "role": "system",
+                "content": (
+                    "데이터에 대한 세부사항(details)을 입력하지 않으셨습니다. 필요한 추가 정보를 알려주세요. "
+                    "예를 들어, 데이터의 기간, 형식, 특정 조건 등이 포함될 수 있습니다."
+                )
+            })
+            return jsonify({"reply": "데이터에 대한 세부사항(details)을 입력해 주세요. 예: 데이터의 기간, 형식, 특정 조건 등."}), 400
+
 
         # 함수 실행
-        search_results = search_similar_data({
-            "data_type": arguments["data_type"],
-            "purpose": arguments["purpose"],
-            "details": arguments["details"]
-        })
+        try:
+            search_results = search_similar_data({
+                "data_type": arguments["data_type"],
+                "purpose": arguments["purpose"],
+                "details": arguments["details"]
+            })
 
-        # 함수 결과 추가
-        conversation_history.append({
-            "role": "function",
-            "name": func_name,
-            "content": json.dumps(search_results)
-        })
+            # 함수 결과 추가
+            conversation_history.append({
+                "role": "function",
+                "name": func_name,
+                "content": json.dumps(search_results)
+            })
 
-        # 함수 결과에 기반해 답변하도록 system 메시지 추가
-        conversation_history.append({
-            "role": "system",
-            "content": (
-                "위 function 메시지에서 JSON으로 된 검색 결과를 받았습니다. "
-                "이 JSON 데이터에 담긴 데이터셋 정보만 활용하여 사용자가 원하는 목적에 적합한 데이터셋을 최대한 상세히 설명하십시오. "
-                "형식, 파일 크기, 포함된 메타데이터 필드, 어떤 분석이나 활용에 유용한지 등을 구체적으로 안내하세요. "
-                "JSON 결과에 데이터셋이 없거나 만족스럽지 않다면 '적합한 데이터가 없습니다.'라고 답하세요. "
-                "외부 지식이나 추론 금지. 오직 JSON 결과 기반."
+            # 함수 결과에 기반해 답변하도록 system 메시지 추가
+            conversation_history.append({
+                "role": "system",
+                "content": (
+                    "위 function 메시지에서 JSON으로 된 검색 결과를 받았습니다. "
+                    "이 JSON 데이터에 담긴 데이터셋 정보만 활용하여 사용자가 원하는 목적에 적합한 데이터셋을 최대한 상세히 설명하십시오. "
+                    "형식, 파일 크기, 포함된 메타데이터 필드, 어떤 분석이나 활용에 유용한지 등을 구체적으로 안내하세요. "
+                    "JSON 결과에 데이터셋이 없거나 만족스럽지 않다면 '적합한 데이터가 없습니다.'라고 답하세요. "
+                    "외부 지식이나 추론 금지. 오직 JSON 결과 기반."
+                )
+            })
+
+            # 최종 답변 생성
+            final_response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=conversation_history
             )
-        })
+            final_assistant_msg = final_response.choices[0].message.content
+            return jsonify({"reply": final_assistant_msg})
 
-        # 최종 답변 생성
-        final_response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=conversation_history
-        )
-        final_assistant_msg = final_response.choices[0].message.content
-        return jsonify({"reply": final_assistant_msg})
+        except Exception as e:
+            print(f"Error in search_similar_data: {e}")
+            return jsonify({"reply": "데이터 검색 중 오류가 발생했습니다. 관리자에게 문의하세요."}), 500
 
     else:
         # 함수 호출 없이 바로 답변할 경우

@@ -11,7 +11,6 @@
 
     <!-- jQuery (필수) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <!-- Owl Carousel JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 </head>
@@ -26,20 +25,17 @@
                 <div class="owl-carousel">
                     <div class="item">
                         <a href="https://data.seoul.go.kr/etc/offerReqst.do" title="필요한 데이터가 없을 때! 공공데이터 제공신청">
-                            <img src="hojun\homepage\static\images\city.png" alt="필요한 데이터가 없을 때! 공공데이터 제공신청">
-                            <p>필요한 데이터가 없을 때! 공공데이터 제공신청</p>
+                            <img src="{{ url_for('static', filename='homepage/images/banner1.png') }}" alt="필요한 데이터가 없을 때! 공공데이터 제공신청">
                         </a>
                     </div>
                     <div class="item">
                         <a href="https://bigdata.seoul.go.kr/" title="빅데이터 캠퍼스에 데이터 보러 가자!">
-                            <img src="hojun\homepage\static\images\education.png" alt="빅데이터 캠퍼스에 데이터 보러 가자!">
-                            <p>빅데이터 캠퍼스에 데이터 보러 가자!</p>
+                            <img src="{{ url_for('static', filename='homepage/images/banner2.png') }}" alt="빅데이터 캠퍼스에 데이터 보러 가자!">
                         </a>
                     </div>
                     <div class="item">
                         <a href="https://data.seoul.go.kr/dataService/statView.do?wjId=fec8730ec6c5f503f9ddb5bfb591701c&amp;pageIndex=1" title="2024년 10월 기준 서울시 등록인구 현황">
-                            <img src="hojun\homepage\static\images\security.png" alt="2024년 10월 기준 서울시 등록인구 현황">
-                            <p>2024년 10월 기준 서울시 등록인구 현황</p>
+                            <img src="{{ url_for('static', filename = 'homepage/images/banner3.png') }}" alt="2024년 10월 기준 서울시 등록인구 현황">
                         </a>
                     </div>
                 </div>

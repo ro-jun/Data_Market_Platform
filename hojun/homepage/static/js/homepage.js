@@ -44,10 +44,12 @@ $(document).ready(function () {
         nav: true,
         autoplay: true,
         autoplayTimeout: 3000,
+        autoplayHoverPause: true, // 마우스를 올리면 자동 재생 일시 중지
+        items: 1,
         responsive: {
-            0: { items: 1 },
-            600: { items: 2 },
-            1000: { items: 3 },
+            0: { items: 1 }, // 작은 화면에서 1개
+            600: { items: 1 }, // 중간 화면에서 1개
+            1000: { items: 1 } // 큰 화면에서 1개
         },
     });
 })
