@@ -1,4 +1,6 @@
-# donguk/datainsert/__init__.py
+from hojun.chatbot.function import generate_comprehensive_description
+from hojun.chatbot.llm_setup import EMBEDDING_MODEL, LLM_MODEL
+from hojun.chatbot.vector_db_setup import index
 from flask import Blueprint, render_template, request, jsonify, send_file, current_app
 from bson import Binary, ObjectId
 import io
@@ -36,7 +38,7 @@ def determine_detailed_category(title, main_category, sub_category):
     
     try:
         response = client.chat.completions.create(
-            model="gpt-4o",  # 필요에 따라 모델 이름 변경
+            model=LLM_MODEL,  # 필요에 따라 모델 이름 변경
             messages=[
                 {"role": "system", "content": "You are an expert classifier for detailed subcategories."},
                 {"role": "user", "content": prompt}
@@ -112,6 +114,17 @@ def submit_data():
     if not detailed_category:
         return jsonify({"success": False, "message": "세부 분류를 결정할 수 없습니다."}), 500
 
+    # comprehensive_description 생성
+    comprehensive_description = generate_comprehensive_description(
+        title=title,
+        price=price,
+        main_category=main_category,
+        sub_category=sub_category,
+        detailed_category=detailed_category,
+        description=description,
+        upload_time=upload_time
+    )
+
     # MongoDB에 데이터 저장
     new_data = {
         "title": title,
@@ -120,12 +133,35 @@ def submit_data():
         "sub_category": sub_category,
         "detailed_category": detailed_category,
         "description": description,
+        "comprehensive_description": comprehensive_description,
         "file_info": dataset_file_data,
         "thumbnail_info": thumbnail_file_data,
         "upload_time": upload_time,
     }
     data_collection.insert_one(new_data)
 
+    # OpenAI 임베딩 생성
+    embedding_response = client.embeddings.create(
+        input=comprehensive_description,
+        model=EMBEDDING_MODEL
+    )
+    embedding = embedding_response.data[0].embedding
+
+    # Pinecone 업로드
+    index.upsert([{
+        "id": str(data_collection["_id"]),
+        "values": embedding,
+        "metadata": {
+        "title": title,
+        "price": price,
+        "main_category": main_category,
+        "sub_category": sub_category,
+        "detailed_category": detailed_category,
+        "description": description,
+        "upload_time": upload_time,
+        "comprehensive_description": comprehensive_description,
+    }
+    }])    
     return jsonify({"success": True, "message": "등록이 완료되었습니다!"})
 
 # 파일 다운로드 API

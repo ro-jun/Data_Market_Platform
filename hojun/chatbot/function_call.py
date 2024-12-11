@@ -1,15 +1,11 @@
-from openai import OpenAI
-import os
 import json
 from flask import jsonify
-from hojun.chatbot.similar_search import search_similar_data
+from hojun.chatbot.function import search_similar_data
+from hojun.chatbot.llm_setup import client
 
-client = OpenAI(
-  api_key=os.environ['OPENAI_API_KEY'],  
-)
+client = client
 
-conversation_history = []
-
+# 챗봇이 사용 가능한 함수들
 functions = [
     {
         "name": "search_similar_data",
@@ -38,6 +34,8 @@ functions = [
         }
     }
 ]
+
+conversation_history = []
 
 def handle_user_message(user_message):
     # 초기 대화 설정
