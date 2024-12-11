@@ -29,8 +29,4 @@ def new_chat():
 @chatbot_blueprint.route("/send", methods=["POST"])
 def send_message_route():
     user_message = request.json.get("message")
-
-    if not user_message:
-        return jsonify({"reply": "메시지를 입력해주세요."}), 400
-
     return handle_user_message(user_message)

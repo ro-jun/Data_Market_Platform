@@ -38,6 +38,8 @@ functions = [
 conversation_history = []
 
 def handle_user_message(user_message):
+    global conversation_history  # 전역 변수 사용 선언
+    
     # 초기 대화 설정
     if not conversation_history:
         conversation_history.append({
