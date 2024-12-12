@@ -118,12 +118,10 @@ def submit_data():
     # 시간 저장
     upload_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
-    # detailed_category 결정
-    # detailed_category = determine_detailed_category(title, main_category, sub_category)
-    # if not detailed_category:
-    #     return jsonify({"success": False, "message": "세부 분류를 결정할 수 없습니다."}), 500
+    detailed_category = determine_detailed_category(title, main_category, sub_category)
+    if not detailed_category:
+        return jsonify({"success": False, "message": "세부 분류를 결정할 수 없습니다."}), 500
 
-    detailed_category = "생명공학"
     # categories 컬렉션에서 해당 main_category 문서 찾기
     category_doc = categories_collection.find_one({"name": main_category})
     
