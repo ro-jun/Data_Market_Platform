@@ -11,7 +11,11 @@
     <header>
         <nav>
             <div class="nav-container">
-                <div class="logo"><a href="{{ url_for('homepage.homepage') }}">데테크</a></div>
+                <div class="logo">
+                    <a href="{{ url_for('homepage.homepage') }}" style="text-decoration:none;color: black;">
+                        <img src="{{ url_for('static', filename='images/DATECH_LOGO.png') }}" style="width:100px;height: auto;">
+                    </a>
+                </div>
                 <ul class="nav-links">
                     <li><a href="{{ url_for('categorySearch.categorySearch') }}">데이터 구매</a></li>
                     <li><a href="{{ url_for('datainsert.datainsert') }}">데이터 판매</a></li>

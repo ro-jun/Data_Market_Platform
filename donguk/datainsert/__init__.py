@@ -21,6 +21,14 @@ client = OpenAI(
     api_key = os.getenv('OPENAI_API_KEY'),
 )
 
+# 데이터 저장 API에 접근할 수 있도록 current_app을 사용
+def get_categories_collection():
+    return current_app.config['MONGO_DB'].categories
+
+client = OpenAI(
+    api_key = os.getenv('OPENAI_API_KEY'),
+)
+
 
 def determine_detailed_category(title, main_category, sub_category):
     """
@@ -68,6 +76,7 @@ def datainsert():
 @datainsert_blueprint.route("/submit-data", methods=["POST"])
 def submit_data():
     data_collection = get_data_collection()
+    categories_collection = get_categories_collection()
     
     # 요청 데이터 가져오기
     title = request.form.get("title")
@@ -110,9 +119,26 @@ def submit_data():
     upload_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     # detailed_category 결정
-    detailed_category = determine_detailed_category(title, main_category, sub_category)
-    if not detailed_category:
-        return jsonify({"success": False, "message": "세부 분류를 결정할 수 없습니다."}), 500
+    # detailed_category = determine_detailed_category(title, main_category, sub_category)
+    # if not detailed_category:
+    #     return jsonify({"success": False, "message": "세부 분류를 결정할 수 없습니다."}), 500
+
+    detailed_category = "생명공학"
+    # categories 컬렉션에서 해당 main_category 문서 찾기
+    category_doc = categories_collection.find_one({"name": main_category})
+    
+    if not category_doc:
+        return jsonify({"success": False, "message": "유효하지 않은 메인 카테고리입니다."}), 400
+    
+    # sub_category 검증
+    if sub_category not in category_doc.get("sub_category", {}):
+        return jsonify({"success": False, "message": "유효하지 않은 서브 카테고리입니다."}), 400
+    
+    # 중복 확인 및 detailed_category 추가 로직
+    update_result = categories_collection.update_one(
+        {"name": main_category},
+        {"$addToSet": {f"sub_category.{sub_category}": detailed_category}}
+    )
 
     # comprehensive_description 생성
     comprehensive_description = generate_comprehensive_description(
