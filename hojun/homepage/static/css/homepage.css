@@ -17,11 +17,14 @@ body {
     display: flex;
     flex: 2;
     background-color: #f0f5ff;
+    width: 100%;
+    height: auto;
     margin-left: 50px;
     margin-right: 10px;
     border-radius: 8px;
     padding: 20px;
-    min-height: 200px;
+    /* box-sizing: border-box; */
+    overflow: hidden; /* 초과된 부분 숨김 */
 }
 
 /* section-top-right */
@@ -38,30 +41,30 @@ body {
     min-height: 200px;
 }
 
-.owl-carousel {
+.main-section-top > .main-section-left >.owl-carousel {
     display: flex;
-    flex: 2;
+    flex-direction: column; /* 활성화 한 flexbox 내 수직 정렬 */
     position: relative;
     align-items: center; /* 상단 정렬 */
+    justify-content: center;
     width: 100%;
-    max-width: 600px; /* 최대 너비 설정 */
-    height: 200px; /* `data-info-box`와 동일한 높이로 설정 */
+    height: 200px; /* 부모의 높이를 모두 사용 */
+    overflow: hidden; /* 초과된 부분 숨김 */
 }
 
+/* 베너 */
 .owl-carousel .item {
-    text-align: center; /* 텍스트 중앙 정렬 */
-    height: 100%; /* 부모 높이에 맞게 아이템 높이 설정 */
-    flex-direction: column; /* 이미지와 텍스트를 세로로 정렬 */
-    justify-content: center; /* 중앙 정렬 */
-    align-items: center; /* 중앙 정렬 */
-    background-color: #f5f5f5;
+    display: flex;
+    width: 100%; /* 부모의 너비를 채움 */
+    justify-content: center;
+    align-items: center;
 }
 
-.owl-carousel .item img {
-    max-width: 100%; /* 이미지의 최대 너비 제한 */
-    height: auto; /* 비율 유지 */
-    /* margin-bottom: 10px; */
-}
+/* .owl-carousel .item img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+} */
 
 .data-item {
     display: flex;
@@ -187,8 +190,10 @@ body {
 }
 
 .carousel-item img {
-    width: 60px;
-    height: 60px;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto; /* 이미지 가운데 정렬을 원할 경우 */
 }
 
 .carousel .prev-btn,

@@ -3,16 +3,15 @@ import { sendButton, userInput, messagesSection, newChatBtn, chatHistory } from 
 
 // 초기 메시지 로드 함수
 export function initializeChatbot() {
-    document.addEventListener("DOMContentLoaded", () => {
-        fetch("/chatbot/init")
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.message) {
-                    addMessage(data.message, "bot", messagesSection);
-                }
-            })
-            .catch((error) => console.error("초기 메시지 로드 실패:", error));
-    });
+    fetch("/chatbot/init")
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.message) {
+                messagesSection.innerHTML = ""; // 기존 메시지 초기화
+                addMessage(data.message, "bot", messagesSection);
+            }
+        })
+        .catch((error) => console.error("초기 메시지 로드 실패:", error));
 }
 
 // 메시지 전송 함수
@@ -55,8 +54,12 @@ export function handleSendMessage() {
 
     // Enter 키로 메시지 전송
     userInput.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-            sendButton.click();
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault(); // 기본 동작 방지
+            sendButton.click(); // 메시지 전송
+        } else if (event.key === "Enter" && event.shiftKey) {
+            // 기본 동작(줄 바꿈)을 허용
+            return;
         }
     });
 }
@@ -72,11 +75,9 @@ export function handleNewChat() {
                     const newChat = document.createElement("li");
                     newChat.textContent = `새 채팅 ${chatHistory.children.length + 1}`;
                     chatHistory.appendChild(newChat);
-
                     // 메시지 영역 초기화
                     messagesSection.innerHTML = "";
-
-                    // 초기 메시지 다시 불러오기
+                    // 초기 메시지 추가
                     initializeChatbot();
                 }
             })
