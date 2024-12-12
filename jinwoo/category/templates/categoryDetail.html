@@ -14,7 +14,7 @@
         <!-- 제품 개요 섹션 -->
         <div class="product-overview">
             <div class="product-image">
-                <img src="/category/static/category/images/sneakers.jpg" alt="{{ data.name }}">
+                <img src="/category/static/category/images/enterprise.jpg" alt="{{ data.name }}">
             </div>
             <div class="product-info">
                 <p class="manufacturer">제작자 이름: {{ data.manufacturer }}</p>
@@ -28,6 +28,12 @@
                         <span>{{ tag }}</span>
                     {% endfor %}
                 </div>
+                <button style="padding: 10px; margin-top: 10px;margin-right: 10px; background-color: orange; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">
+                    일반구매
+                </button>
+                <button style="padding: 10px; background-color: black; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;"onclick="handlePartialPurchase();">
+                    부분구매
+                </button>
             </div>
         </div>
 
@@ -64,7 +70,7 @@
             {% if data.reviews %}
                 {% for review in data.reviews %}
                 <div class="review">
-                    <img src="{{ url_for('categorySearch.static', filename='images/user-avatar.png') }}" alt="{{ review.user }}">
+                    <img src="{{ url_for('categorySearch.static', filename='images/user/user-ho.png') }}" alt="{{ review.user }}">
                     <div class="review-info">
                         <div class="review-rating">
                             <div class="stars">
@@ -122,6 +128,28 @@
             </div>
         </div>
     </div>
+
+    <!-- 부분구매 모달 -->
+    <div id="purchaseModal" class="modal-background">
+        <div class="modal-content">
+            <h2>몇 개의 행이 필요하신가요?</h2>
+            <input type="number" id="countInput" placeholder="숫자를 입력하세요" min="1">
+            <div>
+                <button class="confirm" onclick="confirmPurchase()">구매</button>
+                <button class="cancel" onclick="closeModal('purchaseModal')">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 구매 완료 모달 -->
+    <div id="resultModal" class="modal-background">
+        <div class="modal-content">
+            <h2 id="purchaseResult"></h2>
+            <div>
+                <button class="confirm" onclick="closeModal('resultModal')">확인</button>
+            </div>
+        </div>
+    </div>
     {% endblock %}
 
     <script>
@@ -157,37 +185,37 @@
 
     <!-- 더미 데이터 -->
     {% set data = {
-        'name': '데이터 이름',
-        'manufacturer': '제작자 이름',
+        'name': '202409 전국 행정동 단위 소비정보 데이터',
+        'manufacturer': '코리아크레딧뷰로',
         'location': '서울',
         'data_type': 'CSV',
-        'price': 5000,
+        'price': '22,000,000',
         'time_period': '29 min ago',
-        'description': '푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵',
-        'tags': ['쇼핑', '신발', '구매내역'],
+        'description': '본 데이터는 KCB가 각 금융사들로부터 매일 수집하는 최신 금융 데이터를 공간 단위로 재가공해 월별로 제공하고 있습니다.',
+        'tags': ['전국', '행정동', '소비','연령별','성별'],
         'analysis': [
             {'title': 'Heatmap', 'image_url': 'Heatmap.png'},
             {'title': '이상치', 'image_url': 'Candlestick.png'},
-            {'title': '신뢰도 지수?', 'image_url': 'Gauge.png'}
+            {'title': '신뢰도 지수', 'image_url': 'Gauge.png'}
         ],
-        'average_rating': 3.5,
+        'average_rating': 5,
         'reviews': [
             {
-                'user': '사용자 이름',
-                'rating': 3,
+                'user': '송호준',
+                'rating': 5,
                 'location': '서울',
                 'time_ago': '10 min',
-                'comment': '푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵푸르르륵'
+                'comment': '감사합니다.'
             },
             {
-                'user': '사용자 이름',
-                'rating': 4,
+                'user': '전동욱',
+                'rating': 5,
                 'location': '부산',
                 'time_ago': '1 hour',
                 'comment': '좋은 데이터셋입니다. 많은 도움이 되었습니다.'
             },
             {
-                'user': '사용자 이름',
+                'user': '정진우',
                 'rating': 5,
                 'location': '대전',
                 'time_ago': '3 days',
