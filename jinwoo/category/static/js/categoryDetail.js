@@ -211,3 +211,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+function handlePartialPurchase() {
+    document.getElementById('purchaseModal').style.display = 'block';
+}
+
+function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+}
+
+function confirmPurchase() {
+    const countInput = document.getElementById('countInput');
+    const count = parseInt(countInput.value, 10);
+    if (!isNaN(count) && count > 0) {
+        const price = count * 220; // 예: 개수 * 1000원
+        // 구매 완료 모달에 가격 표시
+        document.getElementById('purchaseResult').textContent = `${price}원으로 구매되었습니다.`;
+        closeModal('purchaseModal');
+        // 구매 완료 모달 열기
+        document.getElementById('resultModal').style.display = 'block';
+    } else {
+        alert('올바른 숫자를 입력해주세요.');
+    }
+}
