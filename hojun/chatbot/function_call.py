@@ -147,8 +147,6 @@ def handle_user_message(user_message):
                 model="gpt-4o-mini",
                 messages=conversation_history
             )
-
-            conversation_history = []
             final_assistant_msg = final_response.choices[0].message.content
             return jsonify({"reply": final_assistant_msg})
 
